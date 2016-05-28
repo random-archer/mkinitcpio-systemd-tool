@@ -1,0 +1,42 @@
+# This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
+
+# Provision additional resources for the debug shell
+
+[Unit]
+Description=Initrd Debug Progs Service
+Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md
+ConditionPathExists=/etc/initrd-release
+DefaultDependencies=no
+Before=initrd-debug-shell.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStart=/bin/true
+
+[Install]
+WantedBy=sysinit.target
+WantedBy=initrd-debug-shell.service
+
+[X-SystemdTool]
+
+# systemd tools
+InitrdBinary=/usr/bin/journalctl
+InitrdBinary=/usr/bin/systemd-analyze 
+
+# midnight commander
+InitrdBinary=/usr/bin/mc
+InitrdBinary=/usr/bin/mcedit
+InitrdBinary=/usr/bin/mcview
+InitrdPath=/etc/mc
+InitrdPath=/usr/lib/mc
+InitrdPath=/usr/share/mc
+InitrdBinary=/usr/bin/hostname
+
+# terminal settings for ssh client
+#InitrdBinary=/bin/infocmp
+#InitrdPath=/usr/share/terminfo
+InitrdPath=/usr/share/terminfo/l/linux
+InitrdPath=/usr/share/terminfo/v/vt100
+InitrdPath=/usr/share/terminfo/x/xterm
+#InitrdPath=/usr/share/terminfo/x/xterm-color

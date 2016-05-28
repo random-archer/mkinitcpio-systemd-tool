@@ -1,0 +1,32 @@
+# This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
+
+# Configure networks in the initramfs
+
+[Unit]
+Description=Initrd Network Service
+Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md
+ConditionPathExists=/etc/initrd-release
+DefaultDependencies=no
+Before=cryptsetup-pre.target
+Requires=systemd-networkd.service
+Requires=systemd-resolved.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStart=/bin/true
+# release network devices to allow interface rename after switch-root
+ExecStop=/bin/sh -c "echo 'initrd-network.service: release network devices'"
+ExecStop=/bin/sh -c "for dev in $(ls /sys/class/net) ; do ipaddr flush "$dev" to down ; done"
+ExecStop=/bin/sh -c "for dev in $(ls /sys/class/net) ; do iplink set   "$dev"    down ; done"
+
+[Install]
+WantedBy=sysinit.target
+
+[X-SystemdTool]
+
+# include network activated in initramfs 
+InitrdPath=/etc/systemd/network/initrd-network.network
+
+# provision discovered network kernel modules 
+InitrdCall=add_checked_modules /drivers/net/

@@ -1,0 +1,27 @@
+# This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
+
+# Configure custom debug shell for initramfs
+
+[Unit]
+Description=Initrd Debug Shell Service
+Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md
+ConditionPathExists=/etc/initrd-release
+ConditionPathExists=/dev/tty8
+DefaultDependencies=no
+IgnoreOnIsolate=no
+
+[Service]
+Environment=TERM=linux
+ExecStart=/bin/sh
+Restart=always
+RestartSec=1s
+StandardInput=tty
+TTYPath=/dev/tty8
+TTYReset=yes
+TTYVHangup=yes
+KillMode=process
+KillSignal=SIGTERM
+IgnoreSIGPIPE=no
+
+[Install]
+WantedBy=sysinit.target

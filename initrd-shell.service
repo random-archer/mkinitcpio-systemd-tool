@@ -1,0 +1,39 @@
+# This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
+
+# Provision shell and user settings.
+
+[Unit]
+Description=Initrd Shell Service
+Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md
+ConditionPathExists=/etc/initrd-release
+DefaultDependencies=no
+Before=cryptsetup-pre.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStart=/bin/true
+
+[Install]
+WantedBy=sysinit.target
+
+[X-SystemdTool]
+
+# provision initrd shell
+InitrdBinary=/usr/bin/sulogin
+InitrdBinary=/usr/bin/systemctl
+InitrdBinary=/usr/bin/systemd-cat
+InitrdBinary=/usr/bin/journalctl
+InitrdPath=/etc/systemd/system/initrd-shell.sh mode=700
+
+# configure login script
+InitrdLink=/root/.profile /etc/systemd/system/initrd-shell.sh
+
+# configure user settings
+InitrdPath=/etc/passwd
+InitrdPath=/etc/shadow
+InitrdBuild=/etc/systemd/system/initrd-build.sh command=do_root_shell
+InitrdBuild=/etc/systemd/system/initrd-build.sh command=do_secret_clean
+
+# include ssh credentials
+InitrdPath=/root/.ssh/authorized_keys source=/root/.ssh/authorized_keys mode=600
