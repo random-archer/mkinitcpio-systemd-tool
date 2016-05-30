@@ -60,9 +60,6 @@ what is the mkinitcpio hook entry provided by this package?
 * minimum required hooks are: `base systemd systemd-tool`
 * recommended hooks are: `base systemd autodetect modconf block filesystems keyboard systemd-tool`
 
-where can I find stable version of mkinitcpio-systemd-tool?
-* use releases https://github.com/random-archer/mkinitcpio-systemd-tool/releases
-
 how can I enable my custom service unit in initrd?
 * add `[Unit]` entry `ConditionPathExists=/etc/initrd-release`
 
@@ -118,7 +115,7 @@ which ssh user keys are used by initramfs sshd server?
 ### Shell Script Questions and Answers
 
 there is a `initrd-shell.sh` script provided, what does it do?
-* it used as both interactive login shell and as a systemd service 
+* it is used as both interactive login shell and as a systemd service 
 * when crypto disks are present, it acts as password agent
 * when in ssh console, it offers simple interactive menu
 * when in systemd service mode, it acts as service 
@@ -127,11 +124,24 @@ how can I review `initrd-shell.sh` actions during last boot?
 * use `journalctl -b -t shell`
 
 what does `CTRL-C` do to `initrd-shell.sh` in different modes?
-* while in `ssh console`, it will start a menu form `initrd-shell.sh`
-* while in `/dev/tty debug console`, it will exit from `initrd-shell.sh` 
-* while in `/dev/console login console`, it will restart the `initrd-shell.sh` service
+* `initrd-shell.sh` provides appropriate reaction to interrupt, depending on the context
+* while in `ssh` terminal password agent prompt, it will start a menu form `initrd-shell.sh`
+* while in `/dev/tty` local debug console, it will exit from `initrd-shell.sh` 
+* while in `/dev/console` password agent prompt, it will restart the `initrd-shell.sh` service
 
 is there a silent or no-echo mode during password entry in `initrd-shell.sh`?
 * there are two ways to enter silent mode (see `systemd-ask-password.c`):
 * either by pressing `BACKSPACE` as first key or by pressing `TAB` at any time
 * then the prompt will show extra text: `(no echo)`  
+
+### Package Build Questions and Answers
+
+how can I install a development version of this?
+```
+mkdir -p /tmp/aur
+cd /tmp/aur
+git clone https://aur.archlinux.org/mkinitcpio-systemd-tool.git
+cd mkinitcpio-systemd-tool
+touch .PKGDEV
+makepkg --syncdeps --install   --noconfirm --needed
+``` 
