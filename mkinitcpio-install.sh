@@ -2,6 +2,8 @@
 
 # This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
 
+# provides https://wiki.archlinux.org/index.php/Mkinitcpio#Build_hooks
+
 # mkinitcpio entry point
 help() {
     local pkgname="mkinitcpio-systemd-tool"
@@ -21,7 +23,7 @@ build() {
     local dir="/etc/systemd/system"
     add_dir $dir
     
-    local unit_list=$(grep -l "$tag" $dir/*.service)
+    local unit_list=$(grep -l -F "$tag" "$dir"/*.service 2>/dev/null)
     [[ $unit_list ]] || error "Missing any units in $dir with entry $tag"
 
     local unit

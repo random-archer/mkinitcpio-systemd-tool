@@ -15,13 +15,13 @@ do_root_shell() {
     run_command sed -i -r -e "s|${search}|${replace}|" "$target"
 }
 
-# remove optional entries form /etc/passwd /etc/shadow
+# remove optional entries form /etc/{group,passwd,shadow} 
 do_secret_clean() {
-    local match="^root.*|^systemd.*"
+    local core="^root:.*|^systemd-.*"
+    local udev="^tty:.*|^uucp:.*|^kmem:.|^input:.*|^video:.*|^audio:.*|^lp:.*|^disk:.*|^optical:.*|^storage:.*"
     local target
-    local target_list="$BUILDROOT/etc/passwd $BUILDROOT/etc/shadow"
-    for target in $target_list ; do
-        run_command sed -i -r -e "/${match}/!d" "$target"
+    for target in $BUILDROOT/etc/{group,passwd,shadow} ; do
+        run_command sed -i -r -e "/${core}|${udev}/!d" "$target"
     done
 }
 

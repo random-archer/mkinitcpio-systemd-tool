@@ -17,12 +17,9 @@ Before=cryptsetup.target
 Requires=initrd-shell.service
 
 [Service]
-# provides password agent
 ExecStart=/etc/systemd/system/initrd-shell.sh script_entry=service
 Restart=on-failure
 RestartSec=1s
-#RestartForceExitStatus=
-#RestartPreventExitStatus=
 StandardInput=tty
 StandardOutput=inherit
 StandardError=inherit

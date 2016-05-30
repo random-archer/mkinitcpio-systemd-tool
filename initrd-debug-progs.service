@@ -21,8 +21,10 @@ WantedBy=initrd-debug-shell.service
 [X-SystemdTool]
 
 # systemd tools
-InitrdBinary=/usr/bin/journalctl
 InitrdBinary=/usr/bin/systemd-analyze 
+InitrdBinary=/usr/bin/journalctl
+# proper pager for journalctl
+InitrdBinary=/usr/bin/less replace=yes
 
 # midnight commander
 InitrdBinary=/usr/bin/mc
@@ -33,10 +35,10 @@ InitrdPath=/usr/lib/mc
 InitrdPath=/usr/share/mc
 InitrdBinary=/usr/bin/hostname
 
-# terminal settings for ssh client
+# terminal support for ssh client
 #InitrdBinary=/bin/infocmp
 #InitrdPath=/usr/share/terminfo
+InitrdPath=/usr/share/terminfo/r/rxvt
 InitrdPath=/usr/share/terminfo/l/linux
 InitrdPath=/usr/share/terminfo/v/vt100
 InitrdPath=/usr/share/terminfo/x/xterm
-#InitrdPath=/usr/share/terminfo/x/xterm-color

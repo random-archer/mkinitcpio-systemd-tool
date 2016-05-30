@@ -38,7 +38,7 @@ HOOKS="base systemd systemd-tool"
 3) build/review initrd and reboot
 ```
 mkinitcpio -v -p linux > build.log 
-reboot
+systemctl reboot
 ```
 
 ### Details

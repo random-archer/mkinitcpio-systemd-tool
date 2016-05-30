@@ -8,7 +8,6 @@ Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/mast
 ConditionPathExists=/etc/initrd-release
 ConditionPathExists=/dev/tty8
 DefaultDependencies=no
-IgnoreOnIsolate=no
 
 [Service]
 Environment=TERM=linux
