@@ -143,8 +143,10 @@ is there a silent or no-echo mode during password entry in `initrd-shell.sh`?
 
 ### Package Build Questions and Answers
 
-how can I install a development version of this?
-* create a marker file `.PKGDEV` to build from latest master, for example
+how can I install latest release or development version of this?
+* create a marker file `.PKGDEV` to build from latest master branch, 
+* create a marker file `.PKGREL` to build from latest release tag, 
+* for example
 ```
 mkdir -p /tmp/aur
 cd /tmp/aur
