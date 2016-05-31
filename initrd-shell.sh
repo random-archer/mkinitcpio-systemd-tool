@@ -82,7 +82,7 @@ log_error() {
 
 # list current crypto question files
 list_ask_files() {
-    grep -i -l 'cryptsetup' $watch_folder/ask.* 2>/dev/null
+    2>/dev/null grep -i -l 'cryptsetup' $watch_folder/ask.*
 }
 
 # size of space separated list
@@ -169,7 +169,7 @@ do_agent_custom() {
         await_console_stable || { log_warn "volatile console" ; }
         #clear_console_input ;
         log_info "query start" ;
-        secret=$(run_secret_query 2>$error) || { log_error "query failure [$(cat $error)]" ; return 1 ; }
+        secret=$(2>$error run_secret_query) || { log_error "query failure [$(cat $error)]" ; return 1 ; }
         log_info "query finish" ;
         [ -n "$secret" ] || { log_warn "ignore empty secret" ; continue ; }
         await_request_present || { log_warn "missing request #2" ; return 0 ; }
@@ -185,7 +185,7 @@ do_agent_custom() {
             signature="pid=$pid id=$id message=$message"
             [ -e "$socket" ] || { log_warn "socket removed [$signature]" ; continue ; }
             log_info "reply $signature" ;
-            result=$(run_secret_reply "$secret" "$socket" 2>&1) || { log_error "reply failure [$signature] [$result]" ; return 1 ; }
+            result=$(2>&1 run_secret_reply "$secret" "$socket") || { log_error "reply failure [$signature] [$result]" ; return 1 ; }
         done
         await_secret_validated || { log_warn "invalid secret" ; continue ; }
         return 0

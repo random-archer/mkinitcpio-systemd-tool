@@ -74,7 +74,7 @@ keytype_dropbear() {
 # safety wrapper for external commands
 run_command() {
     local command="$@"
-    local result; result=$($command 2>&1); status=$?
+    local result; result=$(2>&1 $command); status=$?
     case "$status" in
          0) quiet "command success: $command\n$result\n"; return 0 ;;
          *) error "command failure ($status): $command \n$result\n" ; return 1 ;;  

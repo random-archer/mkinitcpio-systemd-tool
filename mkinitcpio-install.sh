@@ -23,7 +23,7 @@ build() {
     local dir="/etc/systemd/system"
     add_dir $dir
     
-    local unit_list=$(grep -l -F "$tag" "$dir"/*.service 2>/dev/null)
+    local unit_list=$(2>/dev/null grep -l -F "$tag" "$dir"/*.service)
     [[ $unit_list ]] || error "Missing any units in $dir with entry $tag"
 
     local unit
@@ -37,7 +37,7 @@ build() {
 # safety wrapper for external commands
 run_command() {
     local command="$@"
-    local result; result=$($command 2>&1); status=$?
+    local result; result=$(2>&1 $command); status=$?
     case "$status" in
          0) quiet "Invoke success: $command\n$result\n"; return 0 ;;
          *) error "Invoke failure ($status): $command \n$result\n" ; return 1 ;;  
