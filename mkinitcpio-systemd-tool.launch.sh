@@ -4,15 +4,15 @@
 
 # build package automation
 
-location=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+location=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)
 cd $location
 
 is_root() {
     [[ $(id -u) == 0 ]]
 }
 
-commit() {
-    echo "// commit"
+do_commit() {
+    echo "// do_commit"
     
     git add --all  :/
     git status 
@@ -24,5 +24,4 @@ commit() {
     
 }
 
-
-commit
+do_commit

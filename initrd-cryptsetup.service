@@ -17,9 +17,10 @@ Before=cryptsetup.target
 Requires=initrd-shell.service
 
 [Service]
-ExecStart=/etc/systemd/system/initrd-shell.sh script_entry=service
+ExecStart=/etc/systemd/system/initrd-shell.sh script_entry=service service_name=cryptsetup
 Restart=on-failure
 RestartSec=1s
+RestartPreventExitStatus=100
 StandardInput=tty
 StandardOutput=inherit
 StandardError=inherit

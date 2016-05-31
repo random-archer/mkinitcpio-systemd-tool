@@ -8,16 +8,19 @@ Never write another mkinitcpio hook again, use systemd-tool.
 
 Provisioning tool for systemd in initramfs (systemd-tool)
 
-Features:
-* initrd debugging
-* early network setup
-* remote ssh access in initrd
-* cryptsetup password answer over ssh
+mkinitcpio hook name: `systemd-tool`
+
+Core features provided by the hook:
 * unified systemd + mkinitcpio configuration
 * automatic provisioning of binary and config resources
 * on-demand invocation of mkinitcpio scripts and in-line functions 
 
-mkinitcpio hook name: `systemd-tool`
+Features provided by the included service units:
+* initrd debugging
+* early network setup
+* interactive user shell
+* remote ssh access in initrd
+* cryptsetup + custom password agent 
 
 ### Example
 
@@ -65,6 +68,10 @@ how can I enable my custom service unit in initrd?
 
 how can I disable my custom service unit in initrd?
 * alter the tag marker string, i.e.: `ConditionPathExists=/etc/xxx/initrd-release`
+
+how systemd unit transitive dependency provisioning works?
+* see `mkinitcpio-install.sh/add_systemd_unit_X()`
+* services and targets found in `[Unit]/Requires|OnFailure` are recursively installed 
 
 what is the purpose of `[X-SystemdTool]` section in service unit files?
 * see https://github.com/systemd/systemd/issues/3340
@@ -137,6 +144,7 @@ is there a silent or no-echo mode during password entry in `initrd-shell.sh`?
 ### Package Build Questions and Answers
 
 how can I install a development version of this?
+* create a marker file `.PKGDEV` to build from latest master, for example
 ```
 mkdir -p /tmp/aur
 cd /tmp/aur
@@ -145,3 +153,4 @@ cd mkinitcpio-systemd-tool
 touch .PKGDEV
 makepkg --syncdeps --install   --noconfirm --needed
 ``` 
+* release versions look like `3-1`, development like `3.25.d069dad-1`

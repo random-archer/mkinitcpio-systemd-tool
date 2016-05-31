@@ -20,6 +20,9 @@ WantedBy=initrd-debug-shell.service
 
 [X-SystemdTool]
 
+# debug tools
+InitrdBinary=/usr/bin/strace optional=yes
+
 # systemd tools
 InitrdBinary=/usr/bin/systemd-analyze 
 InitrdBinary=/usr/bin/journalctl

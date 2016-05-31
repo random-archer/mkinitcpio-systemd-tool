@@ -38,7 +38,7 @@ do_ssh_host_keys() {
         source=$(keypath_openssh "$keytype")
         target=$(keypath_dropbear $(keytype_dropbear "$keytype"))
         if [ -f "$target" ]; then
-            quiet "provision existing dropbear host key: $target"
+            quiet "use existing dropbear host key: $target"
         else
             if [ -f "$source" ] ; then
                 plain "convert openssh to dropbear host key: $target"

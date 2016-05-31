@@ -36,12 +36,14 @@ https://www.freedesktop.org/software/systemd/man/systemd-tty-ask-password-agent.
 
 ### enable / disable net device with busybox
 
+```
 #### required to recover from emergency service
 ExecStart=/bin/sh -c "echo '%N: enalbe network devices'"
-ExecStart=/bin/sh -c "for dev in $(ls /sys/class/net) ; do iplink set "$dev" up   ; done"
+ExecStart=/bin/sh -c "for dev in $(ls /sys/class/net) ; do ip link set $dev up   ; done"
 #### required for interface renaming after root switch
 ExecStop=/bin/sh -c  "echo '%N: disable network devices'"
-ExecStop=/bin/sh -c  "for dev in $(ls /sys/class/net) ; do iplink set "$dev" down ; done"
+ExecStop=/bin/sh -c  "for dev in $(ls /sys/class/net) ; do ip link set $dev down ; done"
+```
 
 ### verify rules in /usr/lib/udev/rules.d/80-net-setup-link.rules
 

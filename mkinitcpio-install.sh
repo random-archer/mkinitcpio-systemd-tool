@@ -96,20 +96,24 @@ add_systemd_unit_X() {
             InitrdBinary)
                 # provision binaries
                 # format:
-                # InitrdBinary=/path/exec [replace=yes]
-                local target= args= replace=
+                # InitrdBinary=/path/exec [replace=yes] [optional=yes]
+                local target= args= replace= optional=
                 target=${values[0]} ; args=${values[@]:1:9}
                 [[ $args ]] && local ${args[*]}
                 if [[ -f $BUILDROOT$target ]] ; then
                     if [[ $replace == "yes" ]] ; then 
-                         quiet "replace present binary $target"
-                         add_binary "$target"
+                        quiet "replace present binary $target"
+                        add_binary "$target"
                     else 
-                         quiet "reuse present binary $target"
+                        quiet "reuse present binary $target"
                     fi
+                elif [[ -f $target ]] ; then
+                    quiet "provision new binary $target"
+                    add_binary "$target"
+                elif [[ $optional = "yes" ]] ; then
+                    quiet "skip optional binary $target"
                 else
-                     quiet "provision new binary $target"
-                     add_binary "$target"
+                    error "missing host binary $target"
                 fi
                 ;;
             InitrdPath)

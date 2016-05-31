@@ -100,8 +100,7 @@ convert_ask_file() {
 # read named field from string of [name=value] entries
 extract_property() {
     local text="$1" name="$2" 
-    local $text # inject
-    eval echo \${$name} # extract
+    local $text && eval echo \${$name}
 }
 
 # remove any pending content from the console input 
@@ -245,13 +244,29 @@ entry_console() {
     fi
 }
 
-# process invocation from systemd unit initrd-cryptsetup.service
+# process invocation from a systemd service unit
 entry_service() {
+    case "$service_name" in
+        default)    service_default ;;
+        cryptsetup) service_cryptsetup ;;
+                 *) log_error "invalid service_name=$service_name" ;;
+    esac
+}
+
+# default service implementation
+service_default() {
+    log_info "default service" 
+    do_exit $service_restart_prevent_code
+}
+
+# cryptsetup service implementation
+service_cryptsetup() {
+    log_info "cryptsetup service" 
     if has_crypt_jobs ; then
         run_crypt_jobs
     else
         log_info "nothing to do" 
-        do_exit 0
+        do_exit $service_restart_prevent_code
     fi
 }
 
@@ -267,11 +282,11 @@ do_prompt() {
         read -n 1 -p "?> " choice
         print_eol
         case "$choice" in
-        a) do_agent_custom ;;
-        s) do_shell ;;
-        r) do_reboot ;;
-        q) do_exit 0 ;;
-        *) echo "$choice ?" ;;
+            a) do_agent_custom ;;
+            s) do_shell ;;
+            r) do_reboot ;;
+            q) do_exit 0 ;;
+            *) echo "$choice ?" ;;
         esac
     done
 }
@@ -329,7 +344,10 @@ setup_defaults() {
     [ -z "$script_verbose" ] && readonly script_verbose="error" # can be {info,warn,error}
     [ -z "$script_tool_vars" ] && readonly script_tool_vars="$MC_SID" # tool shell detection 
     [ -z "$script_identifier" ] && readonly script_identifier="shell" # systemd journal log tag
-    # reboot options 
+    # service settings
+    [ -z "$service_name" ] && readonly service_name="default"
+    [ -z "$service_restart_prevent_code" ] && readonly service_restart_prevent_code=100 # see [Unit]/RestartPreventExitStatus
+    # reboot options
     [ -z "$reboot_options" ] && readonly reboot_options="--force --force --no-ask-password" 
     # password query settings
     [ -z "$query_prompt" ] && readonly query_prompt=" secret>"
@@ -353,8 +371,8 @@ setup_defaults() {
 setup_interrupts() {
     trap trap_HUP HUP
     trap trap_INT INT
-    #trap trap_QUIT QUIT
-    #trap trap_TSTP TSTP
+    trap trap_QUIT QUIT
+    trap trap_TSTP TSTP
     trap trap_TERM TERM
 }
 
