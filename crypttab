@@ -8,10 +8,8 @@
 # how crypttab is used by systemd
 # https://www.freedesktop.org/software/systemd/man/systemd-cryptsetup-generator.html
 
-# to setup crypto disks in initramfs over ssh
-# manually provide here partition UUID with help of `lsblk`
-# then active initrd-cryptsetup.service 
+# provide here mapper partition UUID (instead of kernel command line)
 
 # <name>     <device>                 <password>       <options>
-  swap       UUID=${UUID_SWAP}          none            luks
-  root       UUID=${UUID_ROOT}          none            luks
+  swap      UUID=${UUID_SWAP}          none             luks 
+  root      UUID=${UUID_ROOT}          none             luks

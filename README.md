@@ -60,23 +60,25 @@ systemctl reboot
 
 what is the mkinitcpio hook entry provided by this package?
 * hook name: `systemd-tool`
-* minimum required hooks are: `base systemd systemd-tool`
-* recommended hooks are: `base systemd autodetect modconf block filesystems keyboard systemd-tool`
+* required hooks are: `base systemd systemd-tool`
+* recommended hooks are: `base autodetect modconf block filesystems keyboard fsck systemd systemd-tool`
 
-how can I enable my custom service unit in initrd?
-* add `[Unit]` entry `ConditionPathExists=/etc/initrd-release`
+how can I include/exclude my custom service unit in initrd?
+* include: change `[Unit]` entry to `ConditionPathExists=/etc/initrd-release`
+* exclude: change `[Unit]` entry to `ConditionPathExists=/etc/xxx/initrd-release`
 
-how can I disable my custom service unit in initrd?
-* alter the tag marker string, i.e.: `ConditionPathExists=/etc/xxx/initrd-release`
+how can I enable/disable/mask/unmask my custom service unit in initrd?
+* enable: change `[X-SystemdTool]` entry `InitrdService=enable`
 
 how systemd unit transitive dependency provisioning works?
 * see `mkinitcpio-install.sh/add_systemd_unit_X()`
-* services and targets found in `[Unit]/Requires|OnFailure` are recursively installed 
+* units found in `[Unit]/Requires|OnFailure` are recursively installed 
 
 what is the purpose of `[X-SystemdTool]` section in service unit files?
 * see https://github.com/systemd/systemd/issues/3340
 * this section provides configuration interface for `mkinitcpio` provisioning actions
-* entries include: `InitrdBinary=`, `InitrdPath=`, `InitrdLink=`, `InitrdBuild=`, `InitrdCall=` 
+* entries: `InitrdBuild`, `InitrdCall`, `InitrdService` 
+* entries: `InitrdBinary`, `InitrdPath`, `InitrdLink` 
 
 how can I auto-provision my custom service unit binaries into initramfs?
 * use `InitrdBinary=/path/target-exec` to provision service binary
@@ -98,9 +100,8 @@ how can I provision optional folder or file?
 * use `InitrdPath=/target-file source=/source-file optional=yes`
 
 is there a way to create empty folder or file?
-* for empty dir, use `InitrdPath=/path/target-folder/ create=yes` note trailing SLASH
+* for empty dir, use `InitrdPath=/path/target-dir/ create=yes` note trailing SLASH
 * for empty file, use `InitrdPath=/path/target-file create=yes` note NO trailing slash
-* in order to ignore existing host source, add `source=/some-invalid-path` argument
 
 how can I provision a symbolic link?
 * use `InitrdLink=/path-to-link/link-name /path-to-target/target-name`
@@ -144,8 +145,8 @@ is there a silent or no-echo mode during password entry in `initrd-shell.sh`?
 ### Package Build Questions and Answers
 
 how can I install latest release or development version of this?
-* create a marker file `.PKGDEV` to build from latest master branch, 
-* create a marker file `.PKGREL` to build from latest release tag, 
+* create a marker file `.PKGDEV` to build from latest branch=master , 
+* create a marker file `.PKGREL` to build from latest release tag=vNNN, 
 * for example:
 ```
 mkdir -p /tmp/aur

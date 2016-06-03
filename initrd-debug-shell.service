@@ -8,12 +8,13 @@ Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/mast
 ConditionPathExists=/etc/initrd-release
 ConditionPathExists=/dev/tty8
 DefaultDependencies=no
+IgnoreOnIsolate=yes
 
 [Service]
 Environment=TERM=linux
 ExecStart=/bin/sh
 Restart=always
-RestartSec=1s
+RestartSec=3s
 StandardInput=tty
 TTYPath=/dev/tty8
 TTYReset=yes
@@ -24,3 +25,8 @@ IgnoreSIGPIPE=no
 
 [Install]
 WantedBy=sysinit.target
+
+[X-SystemdTool]
+
+# enable service
+InitrdService=enable

@@ -9,6 +9,8 @@
 [Unit]
 Description=Initrd Cryptsetup Service
 Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md
+ConditionPathExists=/etc/crypttab
+ConditionPathExists=/etc/fstab
 ConditionPathExists=/etc/initrd-release
 DefaultDependencies=no
 After=initrd-shell.service
@@ -31,8 +33,12 @@ WantedBy=sysinit.target
 
 [X-SystemdTool]
 
-# provision crypttab in initramfs
-InitrdPath=/etc/crypttab source=/etc/mkinitcpio.d/crypttab optional=yes
+# enable service
+InitrdService=enable
+
+# provision disk tables in initramfs
+InitrdPath=/etc/crypttab source=/etc/mkinitcpio.d/crypttab replace=yes
+InitrdPath=/etc/fstab    source=/etc/mkinitcpio.d/fstab    replace=yes
 
 # include cryptsetup binaries
 InitrdBinary=/usr/bin/dmsetup
@@ -50,6 +56,7 @@ InitrdPath=/usr/lib/systemd/system/cryptsetup.target
 InitrdPath=/usr/lib/systemd/system/cryptsetup-pre.target
 InitrdBinary=/usr/lib/systemd/systemd-cryptsetup
 InitrdBinary=/usr/lib/systemd/system-generators/systemd-cryptsetup-generator
+InitrdBinary=/usr/lib/systemd/system-generators/systemd-fstab-generator
 
 # include systemd password agent support
 InitrdBinary=/usr/bin/systemd-ask-password

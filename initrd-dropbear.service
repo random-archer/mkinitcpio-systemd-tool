@@ -27,12 +27,15 @@ ExecReload=/bin/kill -HUP ${MAINPID}
 # dropbear reports 1 when exiting on SIGTERM
 SuccessExitStatus= 0 1
 Restart=always
-RestartSec=1s
+RestartSec=3s
 
 [Install]
 WantedBy=sysinit.target
 
 [X-SystemdTool]
+
+# enable service
+InitrdService=enable
 
 # ensure dropbear server host keys
 InitrdBuild=/etc/systemd/system/initrd-build.sh command=do_ssh_host_keys
@@ -41,9 +44,9 @@ InitrdBuild=/etc/systemd/system/initrd-build.sh command=do_ssh_host_keys
 InitrdPath=/etc/dropbear
 
 # provide expected dropbear layout
-InitrdPath=/var/run/        create=yes source=/invalid-source
-InitrdPath=/var/run/utmp    create=yes source=/invalid-source
-InitrdPath=/var/log/        create=yes source=/invalid-source
-InitrdPath=/var/log/btmp    create=yes source=/invalid-source
-InitrdPath=/var/log/wtmp    create=yes source=/invalid-source
-InitrdPath=/var/log/lastlog create=yes source=/invalid-source
+InitrdPath=/var/run/        create=yes
+InitrdPath=/var/run/utmp    create=yes
+InitrdPath=/var/log/        create=yes
+InitrdPath=/var/log/btmp    create=yes
+InitrdPath=/var/log/wtmp    create=yes
+InitrdPath=/var/log/lastlog create=yes

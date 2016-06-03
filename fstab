@@ -1,0 +1,19 @@
+# This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
+
+# TODO
+# currently systemd requires use of "root=" kenel argument for /sysroot mount
+# https://github.com/systemd/systemd/blob/master/src/fstab-generator/fstab-generator.c
+
+# fstab: mappings for direct partitions
+
+# fstab format:
+# https://wiki.archlinux.org/index.php/Fstab
+
+# how fstab is used by systemd
+# https://www.freedesktop.org/software/systemd/man/systemd-fstab-generator.html
+
+# provide here root partition description (instead of kernel command line)
+
+#  <file system>        <dir>      <type>    <option      <dump> <pass>
+#  /dev/mapper/swap     none        swap      defaults            0 0
+#  /dev/mapper/root     /sysroot    ext4      defaults,ro         0 1

@@ -23,13 +23,13 @@ build() {
     local dir="/etc/systemd/system"
     add_dir $dir
     
-    local unit_list=$(2>/dev/null grep -l -F "$tag" "$dir"/*.service)
+    # locate units marked for inclusion into initramfs
+    local unit_list=$(2>/dev/null grep -l -F "$tag" "$dir"/*)
     [[ $unit_list ]] || error "Missing any units in $dir with entry $tag"
 
     local unit
     for unit in $unit_list ; do
         add_systemd_unit_X "$unit"
-        run_command   systemctl --root "$BUILDROOT" enable "$unit"
     done
     
 }
@@ -96,53 +96,61 @@ add_systemd_unit_X() {
             InitrdBinary)
                 # provision binaries
                 # format:
-                # InitrdBinary=/path/exec [replace=yes] [optional=yes]
-                local target= args= replace= optional=
-                target=${values[0]} ; args=${values[@]:1:9}
-                [[ $args ]] && local ${args[*]}
-                if [[ -f $BUILDROOT$target ]] ; then
-                    if [[ $replace == "yes" ]] ; then 
-                        quiet "replace present binary $target"
-                        add_binary "$target"
-                    else 
-                        quiet "reuse present binary $target"
-                    fi
-                elif [[ -f $target ]] ; then
-                    quiet "provision new binary $target"
-                    add_binary "$target"
-                elif [[ $optional = "yes" ]] ; then
-                    quiet "skip optional binary $target"
-                else
-                    error "missing host binary $target"
-                fi
-                ;;
-            InitrdPath)
-                # provision folder/file
-                # format:
-                # InitrdPath=/path/folder [glob=*.sh]
-                # InitrdPath=/path/file [source=/lib/file] [mode=755]
-                local source= target= mode= glob= args= optional= create=
+                # InitrdBinary=/path/exec [source=/host/exec] [replace=yes] [optional=yes]
+                local source= target= args= replace= optional=
                 target=${values[0]} ; args=${values[@]:1:9}
                 [[ $args ]] && local ${args[*]}
                 [[ $source ]] || source="$target"
+                if [[ -f $BUILDROOT$target ]] ; then
+                    if [[ $replace == "yes" ]] ; then 
+                        quiet "replace present binary $target"
+                        add_binary "$source" "$target"
+                    else 
+                        quiet "reuse present binary $target"
+                    fi
+                elif [[ -f $source ]] ; then
+                    quiet "provision new binary $target"
+                    add_binary "$source" "$target"
+                elif [[ $optional = "yes" ]] ; then
+                    quiet "skip optional binary $target"
+                else
+                    error "invalid source binary $source"
+                fi
+                ;;
+            InitrdPath)
+                # provision dir/file
+                # format:
+                # InitrdPath=/path/dir [glob=*.sh] 
+                # InitrdPath=/path/file [source=/lib/file]
+                # arguments: [mode=755] [create=yes] [replace=yes] [optional=yes]
+                local source= target= args= mode= glob= optional= create= replace=
+                target=${values[0]} ; args=${values[@]:1:9}
+                [[ $args ]] && local ${args[*]}
+                [[ $source ]] || source="$target"
+                if [[ $replace == "yes" ]] ; then
+                    quiet "replace path $target"
+                    rm -f -r "$BUILDROOT$target"
+                fi                
                 if [[ -e $BUILDROOT$target ]] ; then
-                    quiet "reuse present path $target"
+                    quiet "reuse path $target"
+                elif [[ $create == "yes" ]] ; then
+                    if [[ ${target: -1} == "/" ]] ; then
+                        quiet "create empty dir $target $mode"
+                        add_dir "$target" "$mode"
+                    else
+                        quiet "create empty file $target $mode"
+                        source=$(mktemp)
+                        add_file "$source" "$target" "$mode"
+                        rm -f "$source"
+                    fi  
                 elif [[ -d $source ]] ; then 
                     quiet "provision new dir $source $glob"
                     add_full_dir "$source" "$glob"
                 elif [[ -f $source ]] ; then
                     quiet "provision new file $source -> $target $mode"
                     add_file "$source" "$target" "$mode"
-                elif [[ $create == "yes" ]] ; then
-                    if [[ ${target: -1} == "/" ]] ; then
-                        quiet "create empty dir $target"
-                        add_dir "$target"
-                    else
-                        quiet "create empty file $target $mode"
-                        add_file "$(mktemp)" "$target" "$mode"
-                    fi  
                 elif [[ $optional = "yes" ]] ; then
-                    quiet "skip optional path $source -> $target"
+                    quiet "skip optional path $target"
                 else
                     error "invalid source path $source"
                 fi
@@ -194,12 +202,32 @@ add_systemd_unit_X() {
                     $code 
                 fi
                 ;;
-            esac
+            InitrdService)
+                # invoke service configuration action
+                # format:
+                # InitrdService=enable|disable|mask|unmask
+                local action= name=
+                action=${values[0]}
+                name="$(basename $unit)"
+                case "$action" in
+                    enable|disable|mask|unmask)
+                        quiet "apply [$action] for unit [$name]"
+                        run_command systemctl --root "$BUILDROOT" "$action" "$name"
+                        ;;
+                    *)
+                        error "invalid InitrdService action: $action"
+                        ;;
+                esac
+                ;; 
+            Initrd*)
+                error "invalid [X-SystemdTool] directive: $key"
+                ;; 
+        esac
 
     done <"$unit"
 
     # preserve reverse soft dependency
-    for dep in {/usr,}/lib/systemd/system/*.wants/${unit##*/}; do
+    for dep in {/etc,/usr/lib}/systemd/system/*.wants/${unit##*/}; do
         if [[ -L $dep ]]; then
             add_symlink "$dep"
         fi

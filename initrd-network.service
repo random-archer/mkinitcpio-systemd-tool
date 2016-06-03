@@ -27,6 +27,9 @@ WantedBy=sysinit.target
 
 [X-SystemdTool]
 
+# enable service
+InitrdService=enable
+
 # TODO use predictable network interface names
 #InitrdPath=/usr/lib/udev/rules.d/80-net-setup-link.rules
 

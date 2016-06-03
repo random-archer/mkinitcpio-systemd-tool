@@ -34,6 +34,13 @@ https://github.com/systemd/systemd/blob/master/src/reply-password/reply-password
 
 https://www.freedesktop.org/software/systemd/man/systemd-tty-ask-password-agent.html
 
+https://github.com/systemd/systemd/blob/master/src/tty-ask-password-agent/tty-ask-password-agent.c
+
+### cryptsetup generator
+
+https://www.freedesktop.org/software/systemd/man/systemd.generator.html
+
+
 ### enable / disable net device with busybox
 
 ```
