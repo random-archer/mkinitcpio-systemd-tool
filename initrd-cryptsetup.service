@@ -28,13 +28,7 @@ StandardOutput=inherit
 StandardError=inherit
 TTYPath=/dev/console
     
-[Install]
-WantedBy=sysinit.target
-
 [X-SystemdTool]
-
-# enable service
-InitrdService=enable
 
 # provision disk tables in initramfs
 InitrdPath=/etc/crypttab source=/etc/mkinitcpio.d/crypttab replace=yes

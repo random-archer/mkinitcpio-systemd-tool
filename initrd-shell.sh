@@ -262,6 +262,7 @@ service_default() {
 # cryptsetup service implementation
 service_cryptsetup() {
     log_info "cryptsetup service" 
+    [[ $watch_folder ]] || log_error "missing $watch_folder"
     if has_crypt_jobs ; then
         run_crypt_jobs
     else
@@ -379,7 +380,6 @@ setup_interrupts() {
 # respond depending on script invocation type [script_entry=xxx]
 process_invocation() {
     log_info "init"
-    mkdir -p "$watch_folder" || log_error "can not make $watch_folder"
     case "$script_entry" in
         # development
         exit)     do_exit ;;

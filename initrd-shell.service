@@ -33,9 +33,9 @@ InitrdBinary=/usr/bin/journalctl
 InitrdLink=/root/.profile /etc/systemd/system/initrd-shell.sh
 
 # configure user settings
-InitrdPath=/etc/group
-InitrdPath=/etc/passwd
-InitrdPath=/etc/shadow
+InitrdPath=/etc/group  replace=yes
+InitrdPath=/etc/passwd replace=yes
+InitrdPath=/etc/shadow replace=yes
 InitrdBuild=/etc/systemd/system/initrd-build.sh command=do_root_shell
 InitrdBuild=/etc/systemd/system/initrd-build.sh command=do_secret_clean
 

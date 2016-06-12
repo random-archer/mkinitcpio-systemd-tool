@@ -2,7 +2,7 @@
 
 # TODO
 # currently systemd requires use of "root=" kenel argument for /sysroot mount
-# https://github.com/systemd/systemd/blob/master/src/fstab-generator/fstab-generator.c
+# http://unix.stackexchange.com/questions/289672/kernel-init-without-root-parameter
 
 # fstab: mappings for direct partitions
 
@@ -11,9 +11,10 @@
 
 # how fstab is used by systemd
 # https://www.freedesktop.org/software/systemd/man/systemd-fstab-generator.html
+# https://github.com/systemd/systemd/blob/master/src/fstab-generator/fstab-generator.c
 
 # provide here root partition description (instead of kernel command line)
 
-#  <file system>        <dir>      <type>    <option      <dump> <pass>
-#  /dev/mapper/swap     none        swap      defaults            0 0
-#  /dev/mapper/root     /sysroot    ext4      defaults,ro         0 1
+#  <file system>        <dir>      <type>    <option>         <dump> <pass>
+#  /dev/mapper/swap     none        swap      defaults           0     0
+#  /dev/mapper/root     /sysroot    ext4      defaults,ro        0     1
