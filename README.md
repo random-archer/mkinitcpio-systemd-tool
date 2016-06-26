@@ -157,3 +157,4 @@ touch .PKGDEV
 makepkg --syncdeps --install   --noconfirm --needed
 ``` 
 * release versions look like `3-1`, development like `3.25.d069dad-1`
+
