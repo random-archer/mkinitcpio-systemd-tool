@@ -37,7 +37,7 @@ InitrdPath=/etc/group  replace=yes
 InitrdPath=/etc/passwd replace=yes
 InitrdPath=/etc/shadow replace=yes
 InitrdBuild=/etc/systemd/system/initrd-build.sh command=do_root_shell
-#InitrdBuild=/etc/systemd/system/initrd-build.sh command=do_secret_clean
+InitrdBuild=/etc/systemd/system/initrd-build.sh command=do_secret_clean
 
 # include ssh credentials
 InitrdPath=/root/.ssh/authorized_keys source=/root/.ssh/authorized_keys mode=600
@@ -46,3 +46,6 @@ InitrdPath=/root/.ssh/authorized_keys source=/root/.ssh/authorized_keys mode=600
 InitrdLink=/usr/bin/halt /usr/bin/systemctl
 InitrdLink=/usr/bin/reboot /usr/bin/systemctl
 InitrdLink=/usr/bin/shutdown /usr/bin/systemctl
+
+# required by /etc/nsswitch.conf
+InitrdBinary=/usr/lib/libnss_compat.so
