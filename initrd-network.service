@@ -42,5 +42,8 @@ InitrdCall=add_checked_modules /drivers/net/
 # runtime location of resolv.conf provided by systemd-resolved.service
 InitrdLink=/etc/resolv.conf /run/systemd/resolve/resolv.conf
 
+# include default config file for systemd-resolved.service 
+InitrdPath=/usr/lib/systemd/resolv.conf
+
 # dns resolution support
 InitrdBinary=/usr/lib/libnss_dns.so.2 optional=yes
