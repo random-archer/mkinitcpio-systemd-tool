@@ -16,7 +16,7 @@ Type=oneshot
 RemainAfterExit=true
 ExecStart=/bin/true
 #### required to recover from emergency service
-ExecStart=/bin/sh -c "echo '%N: enalbe network devices'"
+ExecStart=/bin/sh -c "echo '%N: enable network devices'"
 ExecStart=/bin/sh -c "for dev in $(ls /sys/class/net) ; do ip link set $dev up   ; done"
 #### required for interface renaming after switch-root
 ExecStop=/bin/sh -c  "echo '%N: disable network devices'"
