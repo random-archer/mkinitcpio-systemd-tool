@@ -34,6 +34,9 @@ TTYPath=/dev/console
 InitrdPath=/etc/crypttab source=/etc/mkinitcpio.d/crypttab replace=yes
 InitrdPath=/etc/fstab    source=/etc/mkinitcpio.d/fstab    replace=yes
 
+# provide folder for sysroot.mount 
+InitrdPath=/sysroot/    create=yes
+
 # include cryptsetup binaries
 InitrdBinary=/usr/bin/dmsetup
 InitrdCall=add_module dm-crypt

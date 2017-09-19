@@ -1,9 +1,5 @@
 # This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
 
-# TODO
-# currently systemd requires use of "root=" kenel argument for /sysroot mount
-# http://unix.stackexchange.com/questions/289672/kernel-init-without-root-parameter
-
 # fstab: mappings for direct partitions
 
 # fstab format:
@@ -13,8 +9,10 @@
 # https://www.freedesktop.org/software/systemd/man/systemd-fstab-generator.html
 # https://github.com/systemd/systemd/blob/master/src/fstab-generator/fstab-generator.c
 
+# note: provide /sysroot/ folder inside initramfs disk image
+# note: remove "root=/dev/mapper/root" stanza from kernel command line
+
 # provide here root partition description (instead of kernel command line)
 
-#  <file system>        <dir>      <type>    <option>         <dump> <pass>
-#  /dev/mapper/swap     none        swap      defaults           0     0
-#  /dev/mapper/root     /sysroot    ext4      defaults,ro        0     1
+#  <file system>        <dir>      <type>    <option>                         <dump> <pass>
+#  /dev/mapper/root     /sysroot    auto     x-systemd.device-timeout=9999h     0     1

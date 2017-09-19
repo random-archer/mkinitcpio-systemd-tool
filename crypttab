@@ -11,5 +11,5 @@
 # provide here mapper partition UUID (instead of kernel command line)
 
 # <name>     <device>                 <password>       <options>
-  swap      UUID=${UUID_SWAP}          none             luks 
-  root      UUID=${UUID_ROOT}          none             luks
+#  root      UUID=${UUID_ROOT}          none             luks
+#  swap      UUID=${UUID_SWAP}          none             luks 
