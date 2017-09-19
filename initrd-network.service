@@ -47,3 +47,6 @@ InitrdPath=/usr/lib/systemd/resolv.conf
 
 # dns resolution support
 InitrdBinary=/usr/lib/libnss_dns.so.2 optional=yes
+
+# required for systemd-resolved 
+InitrdPath=/var/tmp/        create=yes
