@@ -84,7 +84,7 @@ add_systemd_unit_X() {
                 # don't add binaries unless they are required
                 if [[ ${values[0]:0:1} != '-' ]]; then
                     local target=
-                    target=${values[0]} 
+                    target=${values[0]#\!\!} 
                     if [[ -f $BUILDROOT$target ]] ; then
                          quiet "reuse present binary $target"
                     else
@@ -98,7 +98,7 @@ add_systemd_unit_X() {
                 # format:
                 # InitrdBinary=/path/exec [source=/host/exec] [replace=yes] [optional=yes]
                 local source= target= args= replace= optional=
-                target=${values[0]} ; args=${values[@]:1:9}
+                target=${values[0]#\!\!} ; args=${values[@]:1:9}
                 [[ $args ]] && local ${args[*]}
                 [[ $source ]] || source="$target"
                 if [[ -f $BUILDROOT$target ]] ; then
