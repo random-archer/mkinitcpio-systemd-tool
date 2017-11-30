@@ -20,6 +20,7 @@ ExecStart=/bin/sh -c "echo '%N: enable network devices'"
 ExecStart=/bin/sh -c "for dev in $(ls /sys/class/net) ; do ip link set $dev up   ; done"
 #### required for interface renaming after switch-root
 ExecStop=/bin/sh -c  "echo '%N: disable network devices'"
+ExecStop=/bin/sh -c  "for dev in $(ls /sys/class/net) ; do ip addr flush $dev ; done"
 ExecStop=/bin/sh -c  "for dev in $(ls /sys/class/net) ; do ip link set $dev down ; done"
 
 [Install]
