@@ -22,6 +22,10 @@ Features provided by the included service units:
 * remote ssh access in initrd
 * cryptsetup + custom password agent 
 
+### Issues
+
+[Useful issues](https://github.com/random-archer/mkinitcpio-systemd-tool/wiki)
+
 ### Example
 
 Basic usage steps:
