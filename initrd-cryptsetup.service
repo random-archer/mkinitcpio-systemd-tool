@@ -37,6 +37,10 @@ InitrdPath=/etc/fstab    source=/etc/mkinitcpio.d/fstab    replace=yes
 # provide folder for sysroot.mount 
 InitrdPath=/sysroot/    create=yes
 
+# include early swap support
+InitrdBinary=/usr/bin/swapon
+InitrdBinary=/usr/bin/swapoff
+
 # include cryptsetup binaries
 InitrdBinary=/usr/bin/dmsetup
 InitrdCall=add_module dm-crypt
