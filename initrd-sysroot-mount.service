@@ -1,0 +1,32 @@
+# This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
+
+# Ensure /sysroot mount before switch root. 
+# See issue #10.
+# See https://www.freedesktop.org/software/systemd/man/bootup.html
+
+[Unit]
+Description=Initrd SysRoot Mount
+Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md
+ConditionPathExists=/etc/initrd-release
+ConditionPathExists=/dev/mapper/root
+ConditionPathExists=/sysroot
+ConditionPathIsMountPoint=!/sysroot
+DefaultDependencies=no
+After=initrd-cleanup.service
+After=initrd-root-fs.target initrd-fs.target initrd.target
+Before=initrd-switch-root.service
+Before=initrd-switch-root.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStart=/bin/mount /dev/mapper/root /sysroot
+
+[Install]
+WantedBy=initrd-switch-root.service
+WantedBy=initrd-switch-root.target
+
+[X-SystemdTool]
+
+# enable service
+InitrdService=enable
