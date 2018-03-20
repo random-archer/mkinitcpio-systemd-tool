@@ -1,32 +1,28 @@
 # This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
 
-# Ensure /sysroot mount before switch root. 
-# See issue #10.
+# Ensure /sysroot mount before switch root.
+# Provides unit dependency: sysroot.mount -> initrd-root-fs.target
+# See https://github.com/systemd/systemd/issues/3551
+# See https://github.com/random-archer/mkinitcpio-systemd-tool/issues/10
+# See https://github.com/random-archer/mkinitcpio-systemd-tool/issues/12
 # See https://www.freedesktop.org/software/systemd/man/bootup.html
+# See https://github.com/systemd/systemd/blob/master/src/fstab-generator/fstab-generator.c
 
 [Unit]
-Description=Initrd SysRoot Mount
+Description=Initrd /sysroot binder
 Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md
 ConditionPathExists=/etc/initrd-release
-ConditionPathExists=/dev/mapper/root
-ConditionPathExists=/sysroot
-ConditionPathIsMountPoint=!/sysroot
 DefaultDependencies=no
-After=initrd-cleanup.service
-After=initrd-root-fs.target initrd-fs.target initrd.target
-Before=initrd-switch-root.service
-Before=initrd-switch-root.target
+After=sysroot.mount
+BindsTo=sysroot.mount
 
 [Service]
 Type=oneshot
 RemainAfterExit=true
-ExecStart=/bin/mount /dev/mapper/root /sysroot
+ExecStart=/bin/true
 
 [Install]
-WantedBy=initrd-switch-root.service
-WantedBy=initrd-switch-root.target
+WantedBy=initrd-root-fs.target
 
 [X-SystemdTool]
-
-# enable service
 InitrdService=enable
