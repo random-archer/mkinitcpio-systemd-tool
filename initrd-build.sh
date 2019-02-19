@@ -26,7 +26,7 @@ do_secret_clean() {
 }
 
 # ensure dropbear server host keys
-do_ssh_host_keys() {
+do_dropbear_keys() {
 
     quiet "provide host server ssh keys"
 
@@ -50,6 +50,22 @@ do_ssh_host_keys() {
         fi
     done
 
+}
+
+# ensure tinyssh server host keys
+do_tinysshd_keys() {
+	
+    quiet "provide host server ssh keys"
+    
+    local keydir=/etc/tinyssh/sshkeydir
+    
+    mkdir -p $keydir
+    chmod go-rwx $keydir 
+    
+    plain "convert openssh to tinysshd host key ed25519"
+    
+    run_command tinyssh-convert -f /etc/ssh/ssh_host_ed25519_key -d $keydir
+	
 }
 
 # location of server host keys used by openssh

@@ -1,0 +1,50 @@
+# This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
+
+# Provide ssh server in initramfs
+
+# note:
+# - tinysshd supports only ed25519 keys
+# - make sure opensshd host keys include ed25519 keys
+# - make sure remote user account also has ed25519 key pair    
+
+# service dependencies:
+# - https://www.archlinux.org/packages/community/x86_64/busybox/
+# - https://www.archlinux.org/packages/community/x86_64/tinyssh/
+# - https://aur.archlinux.org/packages/tinyssh-convert/
+
+[Unit]
+Description=Initrd TinySSHD Service
+Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md
+ConditionPathExists=/etc/initrd-release
+DefaultDependencies=no
+After=initrd-shell.service
+After=initrd-network.service
+Before=cryptsetup-pre.target
+Requires=initrd-shell.service
+Requires=initrd-network.service
+
+[Service]
+ExecStart=/usr/bin/busybox tcpsvd -v 0 22 /usr/bin/tinysshd -v /etc/tinyssh/sshkeydir
+Restart=always
+RestartSec=3s
+
+[Install]
+WantedBy=sysinit.target
+
+[X-SystemdTool]
+
+# enable service
+InitrdService=enable
+
+# ensure tinyssh keys are based on openssh keys
+InitrdBuild=/etc/systemd/system/initrd-build.sh command=do_tinysshd_keys
+
+# provision tinyssh server
+InitrdBinary=/usr/bin/tinysshd
+
+# use full busybox (provides tcpsvd applet)
+InitrdBinary=/usr/bin/busybox replace=yes
+
+# include tinyssh configuration
+InitrdPath=/etc/tinyssh/sshkeydir/.ed25519.sk
+InitrdPath=/etc/tinyssh/sshkeydir/ed25519.pk

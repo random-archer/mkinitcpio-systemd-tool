@@ -2,6 +2,10 @@
 
 # Provide ssh server in initramfs
 
+# TODO
+# see #21
+# see #22
+
 [Unit]
 Description=Initrd Dropbear Service
 Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md
@@ -31,11 +35,13 @@ WantedBy=sysinit.target
 
 [X-SystemdTool]
 
+# TODO support new key formats
+
 # enable service
-InitrdService=enable
+InitrdService=disable
 
 # ensure dropbear server host keys
-InitrdBuild=/etc/systemd/system/initrd-build.sh command=do_ssh_host_keys
+#InitrdBuild=/etc/systemd/system/initrd-build.sh command=do_dropbear_keys
 
 # include generated dropbear configuration
 InitrdPath=/etc/dropbear
