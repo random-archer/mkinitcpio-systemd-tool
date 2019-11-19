@@ -9,7 +9,7 @@
 [Unit]
 Description=Initrd Dropbear Service
 Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md
-ConditionPathExists=/etc/initrd-release
+ConditionPathExists=/etc/xxx/initrd-release
 DefaultDependencies=no
 After=initrd-shell.service
 After=initrd-network.service
