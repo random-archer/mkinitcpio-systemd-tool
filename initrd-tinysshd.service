@@ -10,7 +10,7 @@
 # service dependencies:
 # - https://www.archlinux.org/packages/community/x86_64/busybox/
 # - https://www.archlinux.org/packages/community/x86_64/tinyssh/
-# - https://aur.archlinux.org/packages/tinyssh-convert/
+# - https://www.archlinux.org/packages/community/x86_64/tinyssh-convert/
 
 [Unit]
 Description=Initrd TinySSHD Service
