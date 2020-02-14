@@ -25,6 +25,11 @@ do_secret_clean() {
     done
 }
 
+# re-enable root login via password for initramfs only
+do_root_login_enable() {
+    run_command sed -i -r -e 's/(^root:)!(.*)/\1\2/' $BUILDROOT/etc/shadow
+}
+
 # ensure dropbear server host keys
 do_dropbear_keys() {
 
