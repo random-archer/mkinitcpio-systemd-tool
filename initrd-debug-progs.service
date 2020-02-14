@@ -38,7 +38,6 @@ InitrdBinary=/usr/bin/mcview
 InitrdPath=/etc/mc
 InitrdPath=/usr/lib/mc
 InitrdPath=/usr/share/mc
-InitrdBinary=/usr/bin/hostname
 
 # terminal support for ssh client
 #InitrdBinary=/bin/infocmp
