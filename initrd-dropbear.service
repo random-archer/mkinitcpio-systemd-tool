@@ -41,7 +41,7 @@ WantedBy=sysinit.target
 InitrdService=disable
 
 # ensure dropbear server host keys
-#InitrdBuild=/etc/systemd/system/initrd-build.sh command=do_dropbear_keys
+#InitrdBuild=/usr/lib/mkinitcpio-systemd-tool/initrd-build.sh command=do_dropbear_keys
 
 # include generated dropbear configuration
 InitrdPath=/etc/dropbear
