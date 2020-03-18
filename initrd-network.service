@@ -35,7 +35,7 @@ InitrdService=enable
 #InitrdPath=/usr/lib/udev/rules.d/80-net-setup-link.rules
 
 # include network activated in initramfs 
-InitrdPath=/etc/systemd/network/initrd-network.network
+InitrdPath=/etc/systemd/network/initrd-network.network source=/etc/mkinitcpio-systemd-tool/network/initrd-network.network
 
 # provision discovered network kernel modules 
 InitrdCall=add_checked_modules /drivers/net/

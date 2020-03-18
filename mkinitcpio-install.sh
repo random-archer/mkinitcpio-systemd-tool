@@ -24,7 +24,7 @@ build() {
     add_dir $dir
     
     # locate units marked for inclusion into initramfs
-    local unit_list=$(2>/dev/null grep -l -F "$tag" "$dir"/*)
+    local unit_list=$(2>/dev/null grep -R -l -F "$tag" "$dir"/*)
     [[ $unit_list ]] || error "Missing any units in $dir with entry $tag"
 
     local unit

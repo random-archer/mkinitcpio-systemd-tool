@@ -19,7 +19,7 @@ Before=cryptsetup.target
 Requires=initrd-shell.service
 
 [Service]
-ExecStart=/etc/systemd/system/initrd-shell.sh script_entry=service service_name=cryptsetup
+ExecStart=/usr/lib/mkinitcpio-systemd-tool/initrd-shell.sh script_entry=service service_name=cryptsetup
 Restart=on-failure
 RestartSec=1s
 RestartPreventExitStatus=100
@@ -31,8 +31,8 @@ TTYPath=/dev/console
 [X-SystemdTool]
 
 # provision disk tables in initramfs
-InitrdPath=/etc/crypttab source=/etc/mkinitcpio.d/crypttab replace=yes
-InitrdPath=/etc/fstab    source=/etc/mkinitcpio.d/fstab    replace=yes
+InitrdPath=/etc/crypttab source=/etc/mkinitcpio-systemd-tool/config/crypttab replace=yes
+InitrdPath=/etc/fstab    source=/etc/mkinitcpio-systemd-tool/config/fstab    replace=yes
 
 # provide folder for sysroot.mount 
 InitrdPath=/sysroot/    create=yes

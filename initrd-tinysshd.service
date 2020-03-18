@@ -37,7 +37,7 @@ WantedBy=sysinit.target
 InitrdService=enable
 
 # ensure tinyssh keys are based on openssh keys
-InitrdBuild=/etc/systemd/system/initrd-build.sh command=do_tinysshd_keys
+InitrdBuild=/usr/lib/mkinitcpio-systemd-tool/initrd-build.sh command=do_tinysshd_keys
 
 # provision tinyssh server
 InitrdBinary=/usr/bin/tinysshd
