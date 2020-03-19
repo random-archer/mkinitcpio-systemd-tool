@@ -10,6 +10,8 @@ DefaultDependencies=no
 Conflicts=shutdown.target
 After=plymouth-start.service
 Before=paths.target shutdown.target
+# require explicitly to include in initramfs image
+Requires=initrd-cryptsetup.service
 
 [Path]
 MakeDirectory=yes
