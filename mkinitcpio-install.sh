@@ -24,12 +24,20 @@ build() {
     add_dir $dir
     
     # locate units marked for inclusion into initramfs
-    local unit_list=$(2>/dev/null grep -R -l -F "$tag" "$dir"/*)
+    local unit_list=$(2>/dev/null grep -R -l -F -x -m1 "$tag" "$dir"/*/)
     [[ $unit_list ]] || error "Missing any units in $dir with entry $tag"
 
-    local unit
+    local unit service
     for unit in $unit_list ; do
-        add_systemd_unit_X "$unit"
+        if [[ $unit == *.conf ]]; then
+          service=$(basename "${unit%%.d/*.conf}")
+          # only consider explicitly enabled services
+          if [[ $(systemctl is-enabled "$service") == 'enabled' ]]; then
+            add_systemd_unit_X "$service"
+          fi
+        else
+          add_systemd_unit_X "$unit"
+        fi
     done
     
 }
@@ -57,20 +65,25 @@ add_systemd_unit_X() {
     # and other unit files will be discovered and added.
     #   $1: path to rules file (or name of rules file)
 
-    local unit= rule= entry= key= value= binary= dep=
+    local unit_name= unit= rule= entry= key= value= binary= dep=
 
     # use simple unit name
-    unit=$(basename $1)
+    unit_name=$(basename $1)
     quiet "add systemd unit $unit"
     
     # search in all standard locations
-    unit=$(PATH=/etc/systemd/system:/usr/lib/systemd/system:/lib/systemd/system type -P "$unit")
+    unit=$(PATH=/etc/systemd/system:/usr/lib/systemd/system:/lib/systemd/system type -P "$unit_name")
     if [[ -z $unit ]]; then
-        # complain about not found unit file
+        error "unit not found: %s" "$unit_name"
         return 1
     fi
 
-    add_file "$unit"
+    if [[ -e "$BUILDROOT/$unit" ]]; then
+      quiet "overwriting systemd unit file: %s" "$unit"
+    else
+      quiet "adding systemd unit file: %s" "$unit"
+    fi
+    systemctl cat "$unit_name" | install -Dm644 /dev/stdin "$BUILDROOT/$unit"
 
     while IFS='=' read -r key values; do
         read -ra values <<< "$values"
@@ -81,8 +94,8 @@ add_systemd_unit_X() {
                 map add_systemd_unit_X ${values[*]}
                 ;;
             Exec*)
-                # don't add binaries unless they are required
-                if [[ ${values[0]:0:1} != '-' ]]; then
+                # skip empty values (overrides), don't add binaries unless they are required
+                if [[ -n "${values[0]}" && ${values[0]:0:1} != '-' ]]; then
                     local target=
                     target=${values[0]#\!\!} 
                     if [[ -f $BUILDROOT$target ]] ; then
@@ -224,10 +237,10 @@ add_systemd_unit_X() {
                 ;; 
         esac
 
-    done <"$unit"
+    done < "$BUILDROOT/$unit"
 
     # preserve reverse soft dependency
-    for dep in {/etc,/usr/lib}/systemd/system/*.wants/${unit##*/}; do
+    for dep in {/etc,/usr/lib}/systemd/system/*.wants/${unit_name}; do
         if [[ -L $dep ]]; then
             add_symlink "$dep"
         fi
