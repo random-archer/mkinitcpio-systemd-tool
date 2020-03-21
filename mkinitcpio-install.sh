@@ -52,6 +52,35 @@ run_command() {
     esac
 }
 
+concatenate_unit() {
+    # concatenate units and their potential drop-in files
+    # we do this manually, as in a chroot `systemctl cat` will not work
+    local unit_name="$1"
+    local unit_content=""
+    local service_path=""
+    local override=""
+    # add the top-most service
+    for service_path in {/usr/lib,/etc,/run}/systemd/system; do
+        if [ -f "${service_path}/${unit_name}" ]; then
+          unit_content=""
+          unit_content+="# ${service_path}/${unit_name}\n"
+          unit_content+="$(cat "${service_path}/${unit_name}")\n\n"
+        fi
+    done
+    # add any existing drop-in file for the unit
+    for service_path in {/usr/lib,/etc,/run}/systemd/system; do
+        if [ -d "${service_path}/${unit_name}.d" ]; then
+            for override in "${service_path}/${unit_name}.d/"*.conf; do
+                if [ -f "$override" ]; then
+                    unit_content+="# ${override}\n"
+                    unit_content+="$(cat "${override}")\n\n"
+                fi
+            done
+        fi
+    done
+    echo -e "$unit_content"
+}
+
 # function add_systemd_unit with extra bug fixes for:
 # https://bugs.archlinux.org/task/42396
 # https://bugs.archlinux.org/task/49458
@@ -83,7 +112,7 @@ add_systemd_unit_X() {
     else
       quiet "adding systemd unit file: %s" "$unit"
     fi
-    systemctl cat "$unit_name" | install -Dm644 /dev/stdin "$BUILDROOT/$unit"
+    concatenate_unit "$unit_name" | install -Dm644 /dev/stdin "$BUILDROOT/$unit"
 
     while IFS='=' read -r key values; do
         read -ra values <<< "$values"
