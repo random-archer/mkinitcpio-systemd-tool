@@ -1,0 +1,27 @@
+#
+# setup image cache
+#
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/release/caching?view=azure-devops
+#
+parameters:
+#
+- name: cache_version
+  default: V0
+#
+steps:
+#
+- task: CacheBeta@1
+  inputs:
+    key: nspawn|archive|${{ parameters.cache_version }}
+    path: /var/lib/nspawn/archive/archive.archlinux.org
+    cacheHitVar: HAS_CACHE_ARCHIVE
+  displayName: cache @ archive
+#
+- task: CacheBeta@1
+  inputs:
+    key: nspawn|arch-base|${{ parameters.cache_version }}
+    path: /var/lib/nspawn/archive/localhost/var/lib/nspawn_systemd_tool/arch-base
+    cacheHitVar: HAS_CACHE_ARCH_BASE
+  displayName: cache @ arch-base
+#

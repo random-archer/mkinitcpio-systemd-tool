@@ -1,0 +1,62 @@
+#
+# ci tool setup
+#
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/?view=azure-devops
+#
+trigger:
+  branches:
+    include:
+    - '*'
+#
+pr:
+- '*'
+#
+jobs:
+#
+- job: basic_build
+#
+  pool:
+    vmImage: ubuntu-18.04
+#
+  steps:
+#
+  - bash: env|sort
+    displayName: review enviro
+#
+  - task: UsePythonVersion@0
+    displayName: python version
+    inputs:
+      versionSpec: 3.8
+#
+  - script: tool/azure/setup.sh
+    displayName: install deps
+#
+# FIXME
+#  - template: tool/azure/steps-cache.yml
+#    parameters: # change to reset cache
+#      cache_version: V7
+#
+#  - bash: env|sort|grep CACHE
+#    displayName: review caches
+#
+# FIXME
+  - template: tool/azure/steps-image.yml
+    parameters: # conditional cached build
+      image_path: arch/base
+#     has_active: or(eq(variables.HAS_CACHE_ARCHIVE, 'false'),eq(variables.HAS_CACHE_ARCH_BASE, 'false'))
+#
+  - template: tool/azure/steps-image.yml
+    parameters:
+      image_path: test/cryptsetup
+#
+  - template: tool/azure/steps-image.yml
+    parameters:
+      image_path: test/dropbear
+#
+  - template: tool/azure/steps-image.yml
+    parameters:
+      image_path: test/tinysshd
+#
+  - bash: machinectl --all --full
+    displayName: review machines
+#

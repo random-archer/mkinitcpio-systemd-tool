@@ -1,0 +1,25 @@
+#
+# perfrom build/setup/verify sequence for an image
+#
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops
+#
+parameters:
+#
+- name: image_path
+  default: invalid/location
+- name: has_active
+  default: True
+#
+steps:
+#
+- script: tool/image/${{ parameters.image_path }}/build.py
+  displayName: ${{ parameters.image_path }} @ build
+  condition: eq(${{ parameters.has_active }}, True)
+#
+- script: tool/image/${{ parameters.image_path }}/setup.py
+  displayName: ${{ parameters.image_path }} @ setup
+  condition: eq(${{ parameters.has_active }}, True)
+#
+- script: tool/image/${{ parameters.image_path }}/verify.py
+  displayName: ${{ parameters.image_path }} @ verify
+  condition: eq(${{ parameters.has_active }}, True)

@@ -2,3 +2,9 @@
 
 # eclipse meta data
 .project
+
+# python ide config
+.pydevproject
+
+# image boot folder mount
+boot

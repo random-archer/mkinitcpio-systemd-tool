@@ -1,0 +1,10 @@
+
+# internal network
+
+[Match]
+Name=mv-*
+
+[Network]
+DHCP=ipv4
+IPForward=ipv4
+LinkLocalAddressing=no

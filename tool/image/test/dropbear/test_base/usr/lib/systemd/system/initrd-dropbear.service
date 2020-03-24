@@ -1,0 +1,72 @@
+# /usr/lib/systemd/system/initrd-dropbear.service
+# This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
+
+# Provide ssh server in initramfs
+
+# note:
+# mutually exclusive with initrd-tinysshd.service
+
+# note: 
+# for possible issues see
+# - https://github.com/random-archer/mkinitcpio-systemd-tool/issues/21
+
+# note:
+# dropbear supports only these key types: rsa, ecdsa
+
+# note:
+# dropbear-convert needs host keys in pem format
+# to regenerate host keys use: `ssh-keygen -A -m PEM`
+
+# service dependencies:
+# https://www.archlinux.org/packages/community/x86_64/dropbear/
+
+[Unit]
+Description=Initrd Dropbear Service
+Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md
+ConditionPathExists=/etc/initrd-release
+DefaultDependencies=no
+After=initrd-shell.service
+After=initrd-network.service
+Before=cryptsetup-pre.target
+Requires=initrd-shell.service
+Requires=initrd-network.service
+
+[Service]
+# dropbear options:
+# -s     Disable password logins.
+# -j     Disable local port forwarding.
+# -k     Disable remote port forwarding.
+# -F     Don't fork into background.
+ExecStart=/bin/dropbear -s -j -k -F
+ExecReload=/bin/kill -HUP ${MAINPID}
+# dropbear reports 1 when exiting on SIGTERM
+SuccessExitStatus= 0 1
+Restart=always
+RestartSec=3s
+
+[Install]
+WantedBy=sysinit.target
+
+[X-SystemdTool]
+
+# ensure dropbear server host keys
+InitrdBuild=/usr/lib/mkinitcpio-systemd-tool/initrd-build.sh command=do_dropbear_keys
+
+# include generated dropbear configuration
+InitrdPath=/etc/dropbear
+
+# provide expected dropbear layout
+InitrdPath=/var/run/        create=yes
+InitrdPath=/var/run/utmp    create=yes
+InitrdPath=/var/log/        create=yes
+InitrdPath=/var/log/btmp    create=yes
+InitrdPath=/var/log/wtmp    create=yes
+InitrdPath=/var/log/lastlog create=yes
+
+# /etc/systemd/system/initrd-dropbear.service.d/override.conf
+
+[Service]
+
+# change port
+ExecStart=
+ExecStart=/bin/dropbear -s -j -k -F -p 221
