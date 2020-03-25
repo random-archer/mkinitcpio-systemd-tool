@@ -53,28 +53,31 @@ HOOKS="base systemd systemd-tool"
 
 2) review, change and enable/disable provided default files:
 ```
-/etc/systemd/network/initrd-*.network
-/etc/systemd/system/initrd-*.service
-/etc/systemd/system/initrd-*.sh
+[PREFIX]/network/initrd-*.network
+[PREFIX]/system/initrd-*.service
+[PREFIX]/system/initrd-*.sh
 ```
 
 3) build/review initrd and reboot
 ```
-mkinitcpio -v -p linux > build.log 
+mkinitcpio -v -p linux > build.log
+lsinitcpio -x /boot/initramfs-linux.img
 systemctl reboot
 ```
 
 ### Details
 
 `makepkg/pacman` install actions:
-* provision default files included in this package into the `/etc`
-* specific folders are `/etc/mkinitcpio.d` and  `/etc/systemd/{system,network}`
+* take a look in [arch repo](https://git.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/mkinitcpio-systemd-tool) 
+  and [make file](https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/Makefile)
+* provision default files included in this package into the `/etc,/usr/lib`
+* specific folders are `/etc/mkinitcpio-systemd-tool` and  `[PREFIX]/systemd/system`
 
 `mkinitcpio` install hook actions:
-* look in the `/etc/systemd/system`
+* look for enabled units in the `/etc/systemd/system`
 * include in initrd units containing marker `/etc/initrd-release`
 * activate transitively in initrd any discovered systemd service units
-* auto provision into initramfs resources declared in the initrd service units  
+* auto provision into initramfs resources declared inside initrd service units  
 
 ### Provisioning Questions and Answers
 
@@ -83,12 +86,15 @@ what is the mkinitcpio hook entry provided by this package?
 * required hooks are: `base systemd systemd-tool`
 * recommended hooks are: `base autodetect modconf block filesystems keyboard fsck systemd systemd-tool`
 
-how can I include/exclude my custom service unit in initrd?
-* include: change `[Unit]` entry to `ConditionPathExists=/etc/initrd-release`
-* exclude: change `[Unit]` entry to `ConditionPathExists=/etc/xxx/initrd-release`
+how can I customize installed service units?
+* follow regular approaches to [editing provided units](https://wiki.archlinux.org/index.php/systemd#Editing_provided_units)
+* create service unit override with `systemctl edit $unit_name`
+* enable/disable with `systemctl enable $unit_name` / `systemctl disable $unit_name`
 
-how can I enable/disable/mask/unmask my custom service unit in initrd?
-* enable: change `[X-SystemdTool]` entry `InitrdService=enable`
+how can I review generated `/boot/initramfs-linux.img`?
+* to review `initramfs.img` after `mkinitcpio` but before `reboot`, use:
+* visually, with [midnight commander](https://www.archlinux.org/packages/community/x86_64/mc/) 
+  or scripted, with [mkinitcpio lsinitcpio](https://wiki.archlinux.org/index.php/Mkinitcpio#Extracting_the_image) 
 
 how systemd unit transitive dependency provisioning works?
 * see `mkinitcpio-install.sh/add_systemd_unit_X()`
@@ -97,12 +103,11 @@ how systemd unit transitive dependency provisioning works?
 what is the purpose of `[X-SystemdTool]` section in service unit files?
 * see https://github.com/systemd/systemd/issues/3340
 * this section provides configuration interface for `mkinitcpio` provisioning actions
-* entries: `InitrdBuild`, `InitrdCall`, `InitrdService` 
-* entries: `InitrdBinary`, `InitrdPath`, `InitrdLink` 
+* supported directives: `InitrdPath` `InitrdLink` `InitrdBinary` `InitrdBuild` `InitrdCall`
 
 how can I auto-provision my custom service unit binaries into initramfs?
 * use `InitrdBinary=/path/target-exec` to provision service binary
-* also will be provisioned all `Exec*` entries such as `ExecStart=/bin/program`
+* also will be provisioned all `Exec*` entries such as `ExecStart=/usr/bin/program`
 
 how can I auto-provision my custom service unit resources into initramfs?
 * use `InitrdPath=/path/to/host/folder-or-file`
@@ -137,7 +142,7 @@ can I call a little provisioning script snippet during mkinitcpio build time?
 how can I provide custom interactive user shell for ssh client
 * change sample shell file located in `/etc/systemd/system/initrd-shell.sh`  
 
-which ssh user keys are used by initramfs sshd server? 
+which ssh user keys are used by initramfs sshd server(s)?
 * they come from host `/root/.ssh/authorized_keys`
 
 ### Shell Script Questions and Answers
@@ -161,20 +166,3 @@ is there a silent or no-echo mode during password entry in `initrd-shell.sh`?
 * there are two ways to enter silent mode (see `systemd-ask-password.c`):
 * either by pressing `BACKSPACE` as first key or by pressing `TAB` at any time
 * then the prompt will show extra text: `(no echo)`  
-
-### Package Build Questions and Answers
-
-how can I install latest release or development version of this?
-* create a marker file `.PKGDEV` to build from latest branch=master , 
-* create a marker file `.PKGREL` to build from latest release tag=vNNN, 
-* for example:
-```
-mkdir -p /tmp/aur
-cd /tmp/aur
-git clone https://aur.archlinux.org/mkinitcpio-systemd-tool.git
-cd mkinitcpio-systemd-tool
-touch .PKGDEV
-makepkg --syncdeps --install   --noconfirm --needed
-``` 
-* release versions look like `3-1`, development like `3.25.d069dad-1`
-

@@ -28,5 +28,4 @@ WantedBy=sysinit.target
 
 [X-SystemdTool]
 
-# enable service
-InitrdService=enable
+# empty

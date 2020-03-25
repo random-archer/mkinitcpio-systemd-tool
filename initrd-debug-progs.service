@@ -20,9 +20,6 @@ WantedBy=initrd-debug-shell.service
 
 [X-SystemdTool]
 
-# enable service
-InitrdService=enable
-
 # debug tools
 InitrdBinary=/usr/bin/strace optional=yes
 

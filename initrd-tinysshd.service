@@ -3,9 +3,12 @@
 # Provide ssh server in initramfs
 
 # note:
+# mutually exclusive with initrd-dropbear.service
+
+# note:
 # - tinysshd supports only ed25519 keys
 # - make sure opensshd host keys include ed25519 keys
-# - make sure remote user account also has ed25519 key pair    
+# - make sure remote user account also has ed25519 key pair
 
 # service dependencies:
 # - https://www.archlinux.org/packages/community/x86_64/busybox/
@@ -32,9 +35,6 @@ RestartSec=3s
 WantedBy=sysinit.target
 
 [X-SystemdTool]
-
-# enable service
-InitrdService=enable
 
 # ensure tinyssh keys are based on openssh keys
 InitrdBuild=/usr/lib/mkinitcpio-systemd-tool/initrd-build.sh command=do_tinysshd_keys
