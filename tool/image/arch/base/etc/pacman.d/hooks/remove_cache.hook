@@ -1,0 +1,12 @@
+
+[Trigger]
+Operation = Upgrade
+Operation = Install
+Operation = Remove
+Type = Package
+Target = *
+
+[Action]
+Description = remove_cache
+When = PostTransaction
+Exec = /usr/bin/rm -rf /var/cache/pacman/pkg

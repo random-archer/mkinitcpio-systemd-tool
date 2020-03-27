@@ -1,0 +1,6 @@
+
+#
+# https://wiki.archlinux.org/index.php/Arch_Linux_Archive
+#
+
+Server={{mirror_url}}
