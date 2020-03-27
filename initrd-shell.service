@@ -19,9 +19,6 @@ WantedBy=sysinit.target
 
 [X-SystemdTool]
 
-# enable service
-InitrdService=enable
-
 # provision initrd shell
 InitrdPath=/usr/lib/mkinitcpio-systemd-tool/initrd-shell.sh mode=700
 InitrdBinary=/usr/bin/sulogin
@@ -52,4 +49,4 @@ InitrdLink=/usr/bin/reboot /usr/bin/systemctl
 InitrdLink=/usr/bin/shutdown /usr/bin/systemctl
 
 # required by /etc/nsswitch.conf
-InitrdBinary=/usr/lib/libnss_compat.so
+InitrdBinary=/usr/lib/libnss_compat.so optional=yes

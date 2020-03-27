@@ -37,20 +37,20 @@ do_dropbear_keys() {
 
     mkdir -p "/etc/dropbear"
     
-    local keytype_list="rsa dsa ecdsa"
-    local keytype source target
-    for keytype in  $keytype_list; do
-        source=$(keypath_openssh "$keytype")
-        target=$(keypath_dropbear $(keytype_dropbear "$keytype"))
-        if [ -f "$target" ]; then
+    local keytype_list="rsa ecdsa"
+    local keytype= source= target=
+    for keytype in $keytype_list ; do
+        source=$(keypath_openssh   "$keytype")
+        target=$(keypath_dropbear  "$keytype")
+        if [[ -f "$target" ]] ; then
             quiet "use existing dropbear host key: $target"
         else
-            if [ -f "$source" ] ; then
+            if [[ -f "$source" ]] ; then
                 plain "convert openssh to dropbear host key: $target"
                 run_command   dropbearconvert openssh dropbear "$source" "$target"
             else
                 plain "generate brand new dropbear host key: $target"
-                run_command   dropbearkey -t $(keytype_dropbear "$keytype") -f "$target"
+                run_command   dropbearkey -t "$keytype" -f "$target"
             fi
         fi
     done
@@ -85,19 +85,12 @@ keypath_dropbear() {
     echo "/etc/dropbear/dropbear_${type}_host_key"
 }
 
-# re-map ssh key type from openssh to dropbear
-keytype_dropbear() {
-    local type="$1"
-    [[ $type == "dsa" ]] && type="dss" 
-    echo "${type}"
-}
-
 # safety wrapper for external commands
 run_command() {
     local command="$@"
-    local result; result=$(2>&1 $command); status=$?
+    local result ; result=$(2>&1 $command) ; status=$?
     case "$status" in
-         0) quiet "command success: $command\n$result\n"; return 0 ;;
+         0) quiet "command success: $command\n$result\n" ; return 0 ;;
          *) error "command failure ($status): $command \n$result\n" ; return 1 ;;  
     esac
 }

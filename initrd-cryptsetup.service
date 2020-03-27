@@ -30,6 +30,8 @@ TTYPath=/dev/console
     
 [X-SystemdTool]
 
+# note: this service is activated by peer *.path unit
+
 # provision disk tables in initramfs
 InitrdPath=/etc/crypttab source=/etc/mkinitcpio-systemd-tool/config/crypttab replace=yes
 InitrdPath=/etc/fstab    source=/etc/mkinitcpio-systemd-tool/config/fstab    replace=yes

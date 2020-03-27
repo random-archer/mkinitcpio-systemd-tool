@@ -10,7 +10,7 @@
 [Unit]
 Description=Initrd Emergency Service
 Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md
-ConditionPathExists=/etc/xxx/initrd-release
+ConditionPathExists=/etc/initrd-release
 DefaultDependencies=no
 Conflicts=shutdown.target
 Conflicts=rescue.service
@@ -30,9 +30,6 @@ StandardError=journal+console
 TTYPath=/dev/console
 
 [X-SystemdTool]
-
-# disable service
-InitrdService=disable
 
 # override /usr/lib/systemd/system/emergency.service
 #InitrdPath=/etc/systemd/system/emergency.service source=/etc/systemd/system/initrd-emergency.service 

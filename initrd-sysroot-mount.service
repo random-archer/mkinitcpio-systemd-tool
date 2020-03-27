@@ -25,4 +25,5 @@ ExecStart=/bin/true
 WantedBy=initrd-root-fs.target
 
 [X-SystemdTool]
-InitrdService=enable
+
+# empty

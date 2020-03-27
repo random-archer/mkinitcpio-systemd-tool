@@ -2,14 +2,27 @@
 
 # Provide ssh server in initramfs
 
-# TODO
-# see #21
-# see #22
+# note:
+# mutually exclusive with initrd-tinysshd.service
+
+# note: 
+# for possible issues see
+# - https://github.com/random-archer/mkinitcpio-systemd-tool/issues/21
+
+# note:
+# dropbear supports only these key types: rsa, ecdsa
+
+# note:
+# dropbear-convert needs host keys in pem format
+# to regenerate host keys use: `ssh-keygen -A -m PEM`
+
+# service dependencies:
+# https://www.archlinux.org/packages/community/x86_64/dropbear/
 
 [Unit]
 Description=Initrd Dropbear Service
 Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md
-ConditionPathExists=/etc/xxx/initrd-release
+ConditionPathExists=/etc/initrd-release
 DefaultDependencies=no
 After=initrd-shell.service
 After=initrd-network.service
@@ -35,13 +48,8 @@ WantedBy=sysinit.target
 
 [X-SystemdTool]
 
-# TODO support new key formats
-
-# enable service
-InitrdService=disable
-
 # ensure dropbear server host keys
-#InitrdBuild=/usr/lib/mkinitcpio-systemd-tool/initrd-build.sh command=do_dropbear_keys
+InitrdBuild=/usr/lib/mkinitcpio-systemd-tool/initrd-build.sh command=do_dropbear_keys
 
 # include generated dropbear configuration
 InitrdPath=/etc/dropbear

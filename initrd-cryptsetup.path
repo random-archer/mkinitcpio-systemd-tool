@@ -5,10 +5,8 @@ Description=Initrd Cryptsetup Path
 Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md
 ConditionPathExists=/etc/crypttab
 ConditionPathExists=/etc/initrd-release
-#ConditionPathExists=!/run/plymouth/pid
 DefaultDependencies=no
 Conflicts=shutdown.target
-After=plymouth-start.service
 Before=paths.target shutdown.target
 # require explicitly to include in initramfs image
 Requires=initrd-cryptsetup.service
@@ -21,9 +19,6 @@ DirectoryNotEmpty=/run/systemd/ask-password
 WantedBy=sysinit.target
 
 [X-SystemdTool]
-
-# enable service
-InitrdService=enable
 
 # disable default password agents
 InitrdPath=/usr/lib/systemd/system/systemd-ask-password-console.path replace=yes create=yes
