@@ -135,11 +135,11 @@ class Machine:
         print(f"### assert text matches: {path}")
         boot_path = f"{project_boot}/{path}"
         test_path = f"{self.test_base}/{path}"
-        boot_text = pathlib.Path(boot_path).read_text().split("\n")
-        test_text = pathlib.Path(test_path).read_text().split("\n")
-        diff_list = difflib.unified_diff(boot_text, test_text, lineterm='')
+        boot_list = pathlib.Path(boot_path).read_text().split("\n")
+        test_list = pathlib.Path(test_path).read_text().split("\n")
+        diff_list = difflib.unified_diff(test_list, boot_list, lineterm='')
         diff_text = "\n".join(diff_list)
-        assert boot_text == test_text, f"no match:\n{diff_text}\n"
+        assert boot_list == test_list, f"no match:\n{diff_text}\n"
 
     def assert_has_link_list(self, path_list:list) -> None:
         for path in path_list:
