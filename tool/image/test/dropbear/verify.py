@@ -29,18 +29,18 @@ machine.produce_boot_result()
 
 path_list = [
 
+    "/usr/lib/systemd/system/initrd-cryptsetup.path",
+    "/usr/lib/systemd/system/initrd-cryptsetup.service",
+    "/usr/lib/systemd/system/initrd-dropbear.service",
+    "/usr/lib/systemd/system/initrd-shell.service",
+    "/usr/lib/systemd/system/initrd-network.service",
+
     "/root/.ssh/authorized_keys",
     "/usr/lib/mkinitcpio-systemd-tool/initrd-shell.sh",
 
     "/etc/dropbear/dropbear_ecdsa_host_key",
     "/etc/dropbear/dropbear_rsa_host_key",
     "/bin/dropbear",
-
-    "/usr/lib/systemd/system/initrd-dropbear.service",
-    "/usr/lib/systemd/system/initrd-network.service",
-    "/usr/lib/systemd/system/initrd-shell.service",
-    "/usr/lib/systemd/system/initrd-cryptsetup.path",
-    "/usr/lib/systemd/system/initrd-cryptsetup.service",
 
 ]
 
