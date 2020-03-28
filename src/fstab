@@ -1,20 +1,22 @@
 # This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
 
-# fstab: mappings for direct partitions in initramfs 
-# file location in real root: /etc/mkinitcpio-systemd-tool/config/fstab
-# file location in initramfs: /etc/fstab
+# fstab: mappings for direct partitions in initramfs:
+# * file location in initramfs: /etc/fstab
+# * file location in real-root: /etc/mkinitcpio-systemd-tool/config/fstab
 
 # fstab format:
 # https://wiki.archlinux.org/index.php/Fstab
 
-# how fstab is used by systemd
+# how fstab is used by systemd:
 # https://www.freedesktop.org/software/systemd/man/systemd-fstab-generator.html
 # https://github.com/systemd/systemd/blob/master/src/fstab-generator/fstab-generator.c
 
-# note: provide /sysroot folder inside initramfs disk image
-# note: remove "root=/dev/mapper/root" stanza from kernel command line
-
-# provide here root partition mapping (instead of kernel command line)
+# note: 
+# * ensure /sysroot mount folder inside initramfs disk image
+# * remove "root=/dev/mapper/root" stanza from kernel command line
+# * provide here root partition mapping (instead of kernel command line)
+# * ensure that mapper-path in fstab corresponds to mapper-name in crypttab
+# * for x-mount options see: https://www.freedesktop.org/software/systemd/man/systemd.mount.html
 
 #  <block-device>       <mount-point>    <fs-type>    <mount-options>                   <dump>  <fsck>
 #  /dev/mapper/root      /sysroot         auto         x-systemd.device-timeout=9999h     0       1

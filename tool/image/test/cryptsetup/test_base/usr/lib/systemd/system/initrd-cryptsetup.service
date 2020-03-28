@@ -11,6 +11,9 @@
 # this is a twin unit for initrd-cryptsetup.path
 # enable only initrd-cryptsetup.path, initrd-cryptsetup.service is activated on demand
 
+# service dependencies:
+# https://www.archlinux.org/packages/core/x86_64/cryptsetup/
+
 [Unit]
 Description=Initrd Cryptsetup Service
 Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md
@@ -33,7 +36,7 @@ StandardInput=tty
 StandardOutput=inherit
 StandardError=inherit
 TTYPath=/dev/console
-    
+
 [X-SystemdTool]
 
 # provision disk tables in initramfs
