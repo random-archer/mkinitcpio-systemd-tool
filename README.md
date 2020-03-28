@@ -54,8 +54,7 @@ HOOKS="base ... systemd systemd-tool"
 ```
 
 2) review, override and enable/disable [provided units](https://github.com/random-archer/mkinitcpio-systemd-tool/tree/master/src)  
-:
-for example, to use `cryptsetup` with `tinysshd`, use:
+for example, to activate `cryptsetup` with `tinysshd` use:
 ```
 systemctl enable initrd-cryptsetup.path initrd-tinysshd.service
 ```
