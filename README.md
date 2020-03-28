@@ -71,8 +71,8 @@ systemctl reboot
 `pacman` install actions:
 * take a look in [arch repo](https://git.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/mkinitcpio-systemd-tool) 
   and [make file](https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/Makefile)
-* provision default files included in this package into the `/etc` and `/usr/lib`
-* specific folders are `/etc/mkinitcpio-systemd-tool` and  `{/etc,/usr/lib}/systemd/system`
+* provision user config and vendor systemd unit files into:
+* `/etc/mkinitcpio-systemd-tool` (with backup) and `/usr/lib/systemd/system` (with silent overwrite)
 
 `mkinitcpio` install hook actions:
 * look for enabled units in the `/etc/systemd/system`
