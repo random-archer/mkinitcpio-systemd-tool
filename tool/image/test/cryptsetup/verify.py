@@ -31,6 +31,11 @@ machine.produce_boot_result()
 
 path_list = [
 
+    "/usr/lib/systemd/system/initrd-cryptsetup.path",
+    "/usr/lib/systemd/system/initrd-cryptsetup.service",
+
+    "/usr/lib/systemd/system/initrd-shell.service",
+
     "/root/.ssh/authorized_keys",
     "/usr/lib/mkinitcpio-systemd-tool/initrd-shell.sh",
 
@@ -38,9 +43,6 @@ path_list = [
     "/bin/swapon",
     "/bin/swapoff",
 
-    "/usr/lib/systemd/system/initrd-shell.service",
-    "/usr/lib/systemd/system/initrd-cryptsetup.path",
-    "/usr/lib/systemd/system/initrd-cryptsetup.service",
 
     "/usr/lib/modules/5.5.6-arch1-1/kernel/dm-crypt.ko",
 

@@ -1,7 +1,5 @@
 ```diff
 - WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING -
-- WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING -
-- WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING -
 ```
 
 You will experience problems due to migration of this project form "aur" to "community" repository.
@@ -9,8 +7,6 @@ You will experience problems due to migration of this project form "aur" to "com
 Please track problems/solutions here: https://github.com/random-archer/mkinitcpio-systemd-tool/issues/32
 
 ```diff
-- WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING -
-- WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING -
 - WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING -
 ```
 
@@ -48,19 +44,23 @@ Features provided by the included service units:
 
 Basic usage steps:
 
+```
+pacman -S mkinitcpio-systemd-tool
+```
+
 1) activate required hooks in `/etc/mkinitcpio.conf`:
 ```
-HOOKS="base systemd systemd-tool"
+HOOKS="base ... systemd systemd-tool"
 ```
 
-2) review, change and enable/disable provided default files:
+2) review, override and enable/disable [provided units](https://github.com/random-archer/mkinitcpio-systemd-tool/tree/master/src)  
+:
+for example, to use `cryptsetup` with `tinysshd`, use:
 ```
-[PREFIX]/network/initrd-*.network
-[PREFIX]/system/initrd-*.service
-[PREFIX]/system/initrd-*.sh
+systemctl enable initrd-cryptsetup.path initrd-tinysshd.service
 ```
 
-3) build/review initrd and reboot
+3) build image, review content and finally reboot:
 ```
 mkinitcpio -v -p linux > build.log
 lsinitcpio -x /boot/initramfs-linux.img
@@ -69,11 +69,11 @@ systemctl reboot
 
 ### Details
 
-`makepkg/pacman` install actions:
+`pacman` install actions:
 * take a look in [arch repo](https://git.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/mkinitcpio-systemd-tool) 
   and [make file](https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/Makefile)
-* provision default files included in this package into the `/etc,/usr/lib`
-* specific folders are `/etc/mkinitcpio-systemd-tool` and  `[PREFIX]/systemd/system`
+* provision default files included in this package into the `/etc` and `/usr/lib`
+* specific folders are `/etc/mkinitcpio-systemd-tool` and  `{/etc,/usr/lib}/systemd/system`
 
 `mkinitcpio` install hook actions:
 * look for enabled units in the `/etc/systemd/system`
@@ -142,7 +142,7 @@ can I call a little provisioning script snippet during mkinitcpio build time?
 * use `InitrdCall=inline-bash-code-here` to call these functions 
 
 how can I provide custom interactive user shell for ssh client
-* change sample shell file located in `/etc/systemd/system/initrd-shell.sh`  
+* change sample shell file located in `/usr/lib/mkinitcpio-systemd-tool/initrd-shell.sh`  
 
 which ssh user keys are used by initramfs sshd server(s)?
 * they come from host `/root/.ssh/authorized_keys`

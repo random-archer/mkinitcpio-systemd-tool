@@ -24,7 +24,7 @@ build() {
     # for most initramfs service units;
     # therefore apply that filter always
     
-    quiet "provision initrd systemd units"
+    quiet "provisioning initrd systemd units"
 
     # marker for inclusion into initramfs
     local marker="ConditionPathExists=/etc/initrd-release"
@@ -46,7 +46,7 @@ build() {
     local unit_task=
     for unit_task in $unit_list ; do
         if [[ -L "$unit_task" ]] ; then
-            # found symlink, i.e. enabled service unit
+            # found a symlink, i.e. enabled service unit
             add_systemd_unit_X "$unit_task"
         fi
     done
@@ -158,8 +158,11 @@ add_systemd_unit_X() {
         read -ra entry_list <<< "$entry_list"
 
         case $directive in
-            Requires|OnFailure)
-                # only add hard dependencies (not Wants)
+            Requires|OnFailure|Unit)
+                # only add hard dependencies (not Wants) from [secion]/directive:
+                # [Unit] / Requires=... , for *.service units
+                # [Unit] / OnFailure=... , for *.service units
+                # [Path] / Unit=... ,  for *.path units
                 map add_systemd_unit_X ${entry_list[*]}
                 ;;
             Exec*)

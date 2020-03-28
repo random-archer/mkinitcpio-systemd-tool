@@ -5,7 +5,11 @@
 
 # Provides replacement for mkinitcpio hook "sd-encrypt" included in cryptsetup
 # https://www.archlinux.org/packages/core/x86_64/cryptsetup/
-# https://git.archlinux.org/svntogit/packages.git/tree/trunk/sd-encrypt?h=packages/cryptsetup
+# https://wiki.archlinux.org/index.php/dm-crypt/System_configuration#Using_sd-encrypt_hook
+
+# note:
+# this is a twin unit for initrd-cryptsetup.path
+# enable only initrd-cryptsetup.path, initrd-cryptsetup.service is activated on demand
 
 [Unit]
 Description=Initrd Cryptsetup Service
@@ -23,6 +27,7 @@ Requires=initrd-shell.service
 ExecStart=/usr/lib/mkinitcpio-systemd-tool/initrd-shell.sh script_entry=service service_name=cryptsetup
 Restart=on-failure
 RestartSec=1s
+# successful crypto unlock is reported as 100
 RestartPreventExitStatus=100
 StandardInput=tty
 StandardOutput=inherit
@@ -30,8 +35,6 @@ StandardError=inherit
 TTYPath=/dev/console
     
 [X-SystemdTool]
-
-# note: this service is activated by peer *.path unit
 
 # provision disk tables in initramfs
 InitrdPath=/etc/crypttab source=/etc/mkinitcpio-systemd-tool/config/crypttab replace=yes
