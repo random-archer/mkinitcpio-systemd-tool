@@ -38,7 +38,7 @@ Features provided by the included service units:
 
 ### Issues
 
-[Useful issues](https://github.com/random-archer/mkinitcpio-systemd-tool/wiki)
+Useful issues [resolved in the past](https://github.com/random-archer/mkinitcpio-systemd-tool/wiki)
 
 ### Example
 
@@ -53,9 +53,11 @@ pacman -S mkinitcpio-systemd-tool
 HOOKS="base ... systemd systemd-tool"
 ```
 
-2) review, override and enable/disable [provided units](https://github.com/random-archer/mkinitcpio-systemd-tool/tree/master/src)  
-for example, to activate `cryptsetup` with `tinysshd` use:
+2) configure, override and enable/disable [provided units](https://github.com/random-archer/mkinitcpio-systemd-tool/tree/master/src), for example: <br/>
+for remote unlocking of luks root with `cryptsetup` and `tinysshd` use:
 ```
+edit /etc/mkinitcpio-systemd-tool/config/crypttab
+edit /etc/mkinitcpio-systemd-tool/config/fstab
 systemctl enable initrd-cryptsetup.path initrd-tinysshd.service
 ```
 
@@ -71,8 +73,9 @@ systemctl reboot
 `pacman` install actions:
 * take a look in [arch repo](https://git.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/mkinitcpio-systemd-tool) 
   and [make file](https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/Makefile)
-* provision user config and vendor systemd unit files into:
-* `/etc/mkinitcpio-systemd-tool` (with backup) and `/usr/lib/systemd/system` (with silent overwrite)
+* provision user config and vendor systemd units into:
+* `/etc/mkinitcpio-systemd-tool` (with backup)
+* `/usr/lib/systemd/system` (with silent overwrite)
 
 `mkinitcpio` install hook actions:
 * look for enabled units in the `/etc/systemd/system`
