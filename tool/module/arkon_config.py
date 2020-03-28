@@ -265,3 +265,10 @@ image_dropbear_url = f"file://localhost/{image_dropbear_path}"
 machine_tinysshd = "test-tinysshd"
 image_tinysshd_path = f"{image_store}/{machine_tinysshd}/default.tar.gz"
 image_tinysshd_url = f"file://localhost/{image_tinysshd_path}"
+
+#
+# verify anything else
+#
+machine_unitada = "test-unitada"
+image_unitada_path = f"{image_store}/{machine_unitada}/default.tar.gz"
+image_unitada_url = f"file://localhost/{image_unitada_path}"
