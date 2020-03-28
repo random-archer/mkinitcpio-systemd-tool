@@ -1,0 +1,28 @@
+# This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
+
+# Override Emergency Target
+
+# TODO does not work
+
+# the default reaction to several failed cryptsetup attempts is to isolate the emergency service
+# which results in loss of network and forced local interactive console - no good for ssh mode 
+
+[Unit]
+
+Description=Initrd Emergency State
+Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md
+ConditionPathExists=/etc/initrd-release
+
+AllowIsolate=yes
+
+After=initrd-emergency.service
+Requires=initrd-emergency.service
+
+[Install]
+# hack to force unit install
+WantedBy=abrakadabra.target
+
+[X-SystemdTool]
+
+# replace default emergency target
+InitrdPath=/etc/systemd/system/emergency.target source=/usr/lib/systemd/system/initrd-emergency.target

@@ -1,6 +1,7 @@
 
 ### nspawn privileged 
 
+cannot create a device node inside systemd-nspawn containers
 https://github.com/kinvolk/kube-spawn/issues/324
 
 https://github.com/systemd/systemd/commit/4f086aab52812472a24c9b8b627589880a38696e

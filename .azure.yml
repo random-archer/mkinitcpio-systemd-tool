@@ -28,22 +28,28 @@ jobs:
     inputs:
       versionSpec: 3.8
 #
+  - task: CopyFiles@2
+    inputs:
+      sourceFolder: tool/azure/home
+      targetFolder: $(HOME)
+      contents: '**'
+      overWrite: true
+    displayName: copy config
+#
   - script: tool/azure/setup.sh
     displayName: install deps
 #
-# FIXME
-#  - template: tool/azure/steps-cache.yml
-#    parameters: # change to reset cache
-#      cache_version: V7
+  - template: tool/azure/steps-cache.yml
+    parameters: # change to reset cache
+      cache_version: V15
 #
-#  - bash: env|sort|grep CACHE
-#    displayName: review caches
+  - bash: env|sort|grep CACHE
+    displayName: review caches
 #
-# FIXME
   - template: tool/azure/steps-image.yml
     parameters: # conditional cached build
       image_path: arch/base
-#     has_active: or(eq(variables.HAS_CACHE_ARCHIVE, 'false'),eq(variables.HAS_CACHE_ARCH_BASE, 'false'))
+      has_active: or(eq(variables.HAS_CACHE_ARCHIVE, 'false'),eq(variables.HAS_CACHE_ARCH_BASE, 'false'))
 #
   - template: tool/azure/steps-image.yml
     parameters:

@@ -6,6 +6,15 @@ set -e
 # prepare azure environment
 #
 
+echo "### ubuntu refresh"
+sudo apt-get -y update
+
+#echo "### setup qemu"
+sudo apt-get -y install qemu-system-x86 cpu-checker
+
+#echo "### report qemu/kvm"
+sudo kvm-ok || true
+
 echo "### setup systemd"
 sudo apt-get -y install attr pigz systemd-container
 

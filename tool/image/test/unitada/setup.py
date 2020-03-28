@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# setup dropbear machine
+# setup unitada machine
 #
 
 from nspawn.setup import *

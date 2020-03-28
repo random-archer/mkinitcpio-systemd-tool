@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# build basic archux image
+# build unitada image
 #
 
 from nspawn.build import *

@@ -17,3 +17,7 @@ individual test image:
 operate currently active machines:
 * invoke `machinectl` to see the list
 * invoke `machinectl shell test-cryptsetup` to enter container
+
+### qemu tests require
+
+https://www.archlinux.org/packages/?name=qemu

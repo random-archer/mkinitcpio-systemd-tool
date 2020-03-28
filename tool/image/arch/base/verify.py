@@ -18,4 +18,4 @@ from arkon_config import machine_base, Machine
 
 machine = Machine(machine_base, this_dir)
 
-machine.produce_boot_result()
+machine.perform_make_boot()
