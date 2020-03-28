@@ -13,16 +13,21 @@ help() {
 
 # mkinitcpio entry point
 build() {
-    
+    #
     # selection logic:
     #
     # 1. "proper" symlinks in /etc/systemd/system
-    # mostly represent enabled service units;
+    # mostly represent aliased/enabled service units;
     # therefore look for links in that folder tree
     #
     # 2. /etc/initrd-release marker is required
     # for most initramfs service units;
     # therefore apply that filter always
+    #
+    # 3. collect only from second-level folders
+    # links placed in /unit.wants/, /unit.requires/, etc;
+    # therefore select only enabled units
+    #
     
     quiet "provisioning initrd systemd units"
 
@@ -31,6 +36,7 @@ build() {
                 
     # location of user-enabled service units links
     local folder="/etc/systemd/system"
+    # note: non-recursive
     add_dir "$folder"
     
     # locate units marked for inclusion into initramfs
@@ -39,10 +45,11 @@ build() {
     # -F : interpret PATTERN as a list of fixed strings, not as regex
     # -x : select only those matches that match the whole line
     # -m : stop reading a file after NUM matching lines
-    local unit_list=$(2>/dev/null grep -R -l -F -x -m1 "$marker" "$folder"/)
-    [[ $unit_list ]] || error "Missing any units in $folder with entry $marker"
+    # /*/: search second level folders, i.e. /unit.wants/ /unit.requires/, etc.
+    local unit_list=$(2>/dev/null grep -R -l -F -x -m1 "$marker" "$folder"/*/)
+    [[ $unit_list ]] || warning "Missing enabled units in $folder with entry $marker"
 
-    # process service unit link candidates
+    # process service unit candidates
     local unit_task=
     for unit_task in $unit_list ; do
         if [[ -L "$unit_task" ]] ; then
@@ -56,18 +63,11 @@ build() {
 # safety wrapper for external commands
 run_command() {
     local command="$@"
-    local result; result=$(2>&1 $command); local status=$?
+    local result ; result=$(2>&1 $command) ; local status=$?
     case "$status" in
-         0) quiet "Invoke success: $command\n$result\n"; return 0 ;;
+         0) quiet "Invoke success: $command\n$result\n" ; return 0 ;;
          *) error "Invoke failure ($status): $command \n$result\n" ; return 1 ;;  
     esac
-}
-
-# detect if service is enabled
-# does not work in chroot environment
-has_unit_enabled() {
-    local unit_name="$1"
-    [[ $(systemctl is-enabled "$unit_name") == 'enabled' ]]
 }
 
 # concatenate units and their potential drop-in files
@@ -79,18 +79,18 @@ plain_unit_concat() {
     local override_path=""
     plain "using synthetic concat for $unit_name"
     # add the top-most service
-    for service_path in {/usr/lib,/etc}/systemd/system; do
-        if [[ -f "${service_path}/${unit_name}" ]]; then
+    for service_path in {/usr/lib,/etc}/systemd/system ; do
+        if [[ -f "${service_path}/${unit_name}" ]] ; then
           unit_content=""
           unit_content+="# ${service_path}/${unit_name}\n"
           unit_content+="$(cat "${service_path}/${unit_name}")\n\n"
         fi
     done
     # add any existing drop-in file for the unit
-    for service_path in {/usr/lib,/etc}/systemd/system; do
-        if [[ -d "${service_path}/${unit_name}.d" ]]; then
-            for override_path in "${service_path}/${unit_name}.d/"*.conf; do
-                if [[ -f "$override_path" ]]; then
+    for service_path in {/usr/lib,/etc}/systemd/system ; do
+        if [[ -d "${service_path}/${unit_name}.d" ]] ; then
+            for override_path in "${service_path}/${unit_name}.d/"*.conf ; do
+                if [[ -f "$override_path" ]] ; then
                     unit_content+="# ${override_path}\n"
                     unit_content+="$(cat "${override_path}")\n\n"
                 fi
@@ -132,7 +132,7 @@ add_systemd_unit_X() {
     
     # resolve unit task into absolute service unit path, returns first match
     unit_path=$(PATH=/etc/systemd/system:/usr/lib/systemd/system type -P "$unit_name")
-    if [[ -z $unit_path ]]; then
+    if [[ -z $unit_path ]] ; then
         error "can not find service unit: %s" "$unit_name"
         return 1
     else
@@ -141,7 +141,7 @@ add_systemd_unit_X() {
     
     # generated result unit file inside initramfs
     unit_target="$BUILDROOT$unit_path"
-    if [[ -e "$unit_target" ]]; then
+    if [[ -e "$unit_target" ]] ; then
       plain "replacing initramfs unit file: %s" "$unit_path"
     else
       quiet "producing initramfs unit file: %s" "$unit_path"
@@ -152,22 +152,25 @@ add_systemd_unit_X() {
 
     # process configuration directives provided by the service unit
     local directive= entry_list=
-    while IFS='=' read -r directive entry_list; do
+    while IFS='=' read -r directive entry_list ; do
     
         # produce entry array
         read -ra entry_list <<< "$entry_list"
 
         case $directive in
-            Requires|OnFailure|Unit)
-                # only add hard dependencies (not Wants) from [secion]/directive:
-                # [Unit] / Requires=... , for *.service units
-                # [Unit] / OnFailure=... , for *.service units
-                # [Path] / Unit=... ,  for *.path units
+            Requires|Requisite|BindsTo|OnFailure|Unit)
+                # only add hard dependencies (not wants) 
+                # from [secion] / directive:
+                # [Unit] / Requires=
+                # [Unit] / Requisite=
+                # [Unit] / BindsTo=
+                # [Unit] / OnFailure=
+                # [Path] / Unit=
                 map add_systemd_unit_X ${entry_list[*]}
                 ;;
             Exec*)
-                # skip empty entry_list (overrides), don't add binaries unless they are required
-                if [[ -n "${entry_list[0]}" && ${entry_list[0]:0:1} != '-' ]]; then
+                # skip empty values (overrides), add only required binaries 
+                if [[ -n "${entry_list[0]}" && ${entry_list[0]:0:1} != '-' ]] ; then
                     local target=
                     target=${entry_list[0]#\!\!} 
                     if [[ -f $BUILDROOT$target ]] ; then
@@ -277,14 +280,14 @@ add_systemd_unit_X() {
                 # invoke build time code in-line
                 # format: 
                 # InitrdCall=bash-code-in-line 
-                local code= 
-                code=${entry_list[*]}
-                if [[ -z $code ]] ; then
+                local inline_code= 
+                inline_code=${entry_list[*]}
+                if [[ -z $inline_code ]] ; then
                     error "missing InitrdCall code in unit $unit_path"
                 else
-                    quiet "call in-line [$code] in unit $unit_path"
+                    quiet "call in-line [$inline_code] in unit $unit_path"
                     # FIXME needs sub shell, but that breaks some of `/usr/lib/initcpio/functions.sh`
-                    $code 
+                    $inline_code
                 fi
                 ;;
             Initrd*)
@@ -293,20 +296,26 @@ add_systemd_unit_X() {
         esac
 
     done < "$unit_target"
+    
+    # handle external-to-unit, i.e. folder-based "Forward" and "Reverse" dependencies:
+    # https://www.freedesktop.org/software/systemd/man/systemd.unit.html#Mapping%20of%20unit%20properties%20to%20their%20inverses
 
-    # preserve reverse soft dependency
-    local unit_want=
-    for unit_want in {/etc,/usr/lib}/systemd/system/*.wants/${unit_name}; do
-        if [[ -L $unit_want ]]; then
-            add_symlink "$unit_want"
+    # preserve "Forward" dependency configured from "this_unit.requires" into "other" units:
+    local unit_forward=
+    if [[ -d $unit_path.requires ]] ; then
+        for unit_forward in "$unit_path".requires/* ; do
+            add_systemd_unit_X "${unit_forward##*/}"
+        done
+    fi
+
+    # preserve "Reverse" dependency configured from "other" units into "this_unit":
+    # other.unit/[Install]/WantedBy=  ${unit_name}    -> /other.unit.wants/${unit_name}
+    # other.unit/[Install]/RequiredBy=${unit_name}    -> /other.unit.requires/${unit_name}
+    local unit_reverse=
+    for unit_reverse in {/etc,/usr/lib}/systemd/system/*{.wants,.requires}/${unit_name} ; do
+        if [[ -L $unit_reverse ]] ; then
+            add_symlink "$unit_reverse"
         fi
     done
 
-    # add hard dependencies
-    local unit_need=
-    if [[ -d $unit_path.requires ]]; then
-        for unit_need in "$unit_path".requires/*; do
-            add_systemd_unit_X "${unit_need##*/}"
-        done
-    fi
 }

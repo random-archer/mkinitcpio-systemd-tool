@@ -1,0 +1,31 @@
+# /etc/systemd/system/root-entry.mount
+
+[Unit]
+
+ConditionPathExists=/etc/crypttab
+ConditionPathExists=/etc/initrd-release
+DefaultDependencies=false
+
+Before=initrd-root-fs.target
+
+[Mount]
+
+What=/dev/disk/by-uuid/8b291379-d515-4203-9d1d-60753f801e81
+
+Where=/root/entry
+
+Type=ext4
+
+Options=noatime,x-systemd.device-timeout=9999h 
+
+[Install]
+
+WantedBy=custom-tester.target
+
+# /etc/systemd/system/root-entry.mount.d/override.conf
+
+# override: append "required"
+
+[Install]
+
+RequiredBy=super-duper.mount
