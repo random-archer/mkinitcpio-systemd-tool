@@ -57,6 +57,10 @@ jobs:
     parameters:
       image_path: test/tinysshd
 #
+  - template: tool/azure/steps-image.yml
+    parameters:
+      image_path: test/unitada
+#
   - bash: machinectl --all --full
     displayName: review machines
 #
