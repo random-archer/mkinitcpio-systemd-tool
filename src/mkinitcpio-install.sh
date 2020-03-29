@@ -151,16 +151,17 @@ add_systemd_unit_X() {
     smart_unit_concat "$unit_name" | install -Dm644 /dev/stdin "$unit_target"
 
     # process configuration directives provided by the service unit
+    # https://www.freedesktop.org/software/systemd/man/systemd.unit.html#%5BUnit%5D%20Section%20Options
     local directive= entry_list=
     while IFS='=' read -r directive entry_list ; do
     
         # produce entry array
         read -ra entry_list <<< "$entry_list"
-
+        
         case $directive in
             Requires|OnFailure|Unit|InitrdUnit)
                 # only add hard dependencies (not wants) 
-                # from [secion] / directive:
+                # from [section] / directive:
                 # [Unit] / Requires=
                 # [Unit] / OnFailure=
                 # [Path] / Unit=
@@ -299,7 +300,7 @@ add_systemd_unit_X() {
     # handle external-to-unit, i.e. folder-based "Forward" and "Reverse" dependencies:
     # https://www.freedesktop.org/software/systemd/man/systemd.unit.html#Mapping%20of%20unit%20properties%20to%20their%20inverses
 
-    # preserve "Forward" dependency configured from "this_unit.requires" into "other" units:
+    # preserve "Forward" dependency configured from "this_unit.requires/" into "other_unit":
     local unit_forward=
     if [[ -d $unit_path.requires ]] ; then
         for unit_forward in "$unit_path".requires/* ; do
@@ -307,9 +308,9 @@ add_systemd_unit_X() {
         done
     fi
 
-    # preserve "Reverse" dependency configured from "other" units into "this_unit":
-    # other.unit/[Install]/WantedBy=  ${unit_name}    -> /other.unit.wants/${unit_name}
-    # other.unit/[Install]/RequiredBy=${unit_name}    -> /other.unit.requires/${unit_name}
+    # preserve "Reverse" dependency configured from "this_unit" into "other_unit", after enable:
+    # this_unit/[Install]/WantedBy=  other_unit   -> enable ->   /other.unit.wants/   this_unit
+    # this_unit/[Install]/RequiredBy=other_unit   -> enable ->   /other.unit.requires/this_unit
     local unit_reverse=
     for unit_reverse in {/etc,/usr/lib}/systemd/system/*{.wants,.requires}/${unit_name} ; do
         if [[ -L $unit_reverse ]] ; then
