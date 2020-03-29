@@ -1,0 +1,50 @@
+# This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
+
+# Provide enhanced configuration for usb keyboard inside initramfs.
+
+# note:
+# * sometimes usb drives are not properly detected/loaded for initrd
+# * try to enable this service to see if that resolves the issue 
+
+[Unit]
+Description=Initrd/Util USB-HCD Service
+ConditionPathExists=/etc/initrd-release
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStart=/bin/true
+
+[Install]
+WantedBy=sysinit.target
+
+[X-SystemdTool]
+
+# driver terminology:
+# xhci = eXtensible Host Controller Interface, USB 3.0 
+# ehci = Enhanced Host Controller Interface, USB 2.0
+# *hcd = host controller driver
+# *pci = pci bus glue
+
+#
+# provision usb modules
+#
+
+# http://cateee.net/lkddb/web-lkddb/USB_XHCI_HCD.html
+InitrdCall=add_module xhci_hcd
+InitrdCall=add_module xhci_pci
+
+# http://cateee.net/lkddb/web-lkddb/USB_EHCI_HCD.html
+InitrdCall=add_module ehci_hcd
+InitrdCall=add_module ehci_pci
+
+# http://cateee.net/lkddb/web-lkddb/HID_GENERIC.html
+InitrdCall=add_module hid_generic
+
+#
+# provision module config
+#
+
+# enforce module load order
+InitrdPath=/etc/modprobe.d/initrd-util-usb-hcd.conf source=/etc/mkinitcpio-systemd-tool/config/initrd-util-usb-hcd.conf

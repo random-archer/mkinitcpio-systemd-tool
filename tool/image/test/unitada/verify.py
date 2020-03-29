@@ -22,6 +22,7 @@ machine.install_tool()
 
 machine.service_enable_list([
     "root-entry.mount",
+    "initrd-util-usb-hcd.service",
 ])
 
 machine.produce_boot_result()
@@ -29,6 +30,8 @@ machine.produce_boot_result()
 path_list = [
 
     "/etc/systemd/system/root-entry.mount",
+    
+    "/etc/modprobe.d/initrd-util-usb-hcd.conf",
 
 ]
 
@@ -36,6 +39,8 @@ link_list = [
 
     "/etc/systemd/system/custom-tester.target.wants/root-entry.mount",
     "/etc/systemd/system/super-duper.mount.requires/root-entry.mount",
+
+    "/etc/systemd/system/sysinit.target.wants/initrd-util-usb-hcd.service",
 
 ]
 
