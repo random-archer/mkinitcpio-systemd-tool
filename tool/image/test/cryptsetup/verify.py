@@ -23,6 +23,7 @@ machine.install_tool()
 machine.service_enable_list([
     "initrd-cryptsetup.path",
     "initrd-debug-progs.service",
+    "initrd-sysroot-mount.service",
 ])
 
 # machine.service_mask("systemd-udevd.service")
@@ -35,6 +36,8 @@ path_list = [
     "/usr/lib/systemd/system/initrd-cryptsetup.service",
 
     "/usr/lib/systemd/system/initrd-shell.service",
+
+    "/usr/lib/systemd/system/initrd-sysroot-mount.service",
 
     "/root/.ssh/authorized_keys",
     "/usr/lib/mkinitcpio-systemd-tool/initrd-shell.sh",
@@ -56,7 +59,7 @@ path_list = [
     "/usr/lib/systemd/systemd-cryptsetup",
     "/usr/lib/systemd/system-generators/systemd-cryptsetup-generator",
     "/usr/lib/systemd/system-generators/systemd-fstab-generator",
-
+    
 ]
 
 link_list = [
@@ -64,6 +67,9 @@ link_list = [
     "/root/.profile",
 
     "/etc/systemd/system/sysinit.target.wants/initrd-cryptsetup.path",
+    "/etc/systemd/system/sysinit.target.wants/initrd-debug-progs.service",
+    
+    "/etc/systemd/system/initrd-root-fs.target.wants/initrd-sysroot-mount.service",
 
 ]
 

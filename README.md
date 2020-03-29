@@ -44,24 +44,31 @@ Useful issues [resolved in the past](https://github.com/random-archer/mkinitcpio
 
 Basic usage steps:
 
+1) study and practice [system recovery](https://github.com/random-archer/mkinitcpio-systemd-tool/wiki/System-Recovery)<br/>
+as practice shows configuration errors do occur
+
+2) install the package
 ```
 pacman -S mkinitcpio-systemd-tool
 ```
 
-1) activate required hooks in `/etc/mkinitcpio.conf`:
+3) activate required hooks in `/etc/mkinitcpio.conf`:
 ```
 HOOKS="base ... systemd systemd-tool"
 ```
 
-2) configure, override and enable/disable [provided units](https://github.com/random-archer/mkinitcpio-systemd-tool/tree/master/src), for example: <br/>
+4) configure, override and enable/disable [provided units](https://github.com/random-archer/mkinitcpio-systemd-tool/tree/master/src), for example: <br/>
 for remote unlocking of luks root with `cryptsetup` and `tinysshd` use:
 ```
 edit /etc/mkinitcpio-systemd-tool/config/crypttab
 edit /etc/mkinitcpio-systemd-tool/config/fstab
-systemctl enable initrd-cryptsetup.path initrd-tinysshd.service
+systemctl enable initrd-cryptsetup.path
+systemctl enable initrd-tinysshd.service
+systemctl enable initrd-debug-progs.service
+systemctl enable initrd-sysroot-mount.service
 ```
 
-3) build image, review content and finally reboot:
+5) build image, review content and finally reboot:
 ```
 mkinitcpio -v -p linux > build.log
 lsinitcpio -x /boot/initramfs-linux.img
@@ -107,7 +114,7 @@ how systemd unit transitive dependency provisioning works?
 what is the purpose of `[X-SystemdTool]` section in service unit files?
 * see https://github.com/systemd/systemd/issues/3340
 * this section provides configuration interface for `mkinitcpio` provisioning actions
-* supported directives: `InitrdPath` `InitrdLink` `InitrdBinary` `InitrdBuild` `InitrdCall`
+* directives: `InitrdPath` `InitrdLink` `InitrdBinary` `InitrdBuild` `InitrdCall` `InitrdUnit` 
 
 how can I auto-provision my custom service unit binaries into initramfs?
 * use `InitrdBinary=/path/target-exec` to provision service binary
