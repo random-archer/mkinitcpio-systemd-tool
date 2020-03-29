@@ -158,14 +158,13 @@ add_systemd_unit_X() {
         read -ra entry_list <<< "$entry_list"
 
         case $directive in
-            Requires|Requisite|BindsTo|OnFailure|Unit)
+            Requires|OnFailure|Unit|InitrdUnit)
                 # only add hard dependencies (not wants) 
                 # from [secion] / directive:
                 # [Unit] / Requires=
-                # [Unit] / Requisite=
-                # [Unit] / BindsTo=
                 # [Unit] / OnFailure=
                 # [Path] / Unit=
+                # [X-SystemdTool] / InitrdUnit= provision units as is
                 map add_systemd_unit_X ${entry_list[*]}
                 ;;
             Exec*)
