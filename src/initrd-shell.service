@@ -36,10 +36,6 @@ InitrdPath=/etc/shadow replace=yes
 InitrdBuild=/usr/lib/mkinitcpio-systemd-tool/initrd-build.sh command=do_root_shell
 InitrdBuild=/usr/lib/mkinitcpio-systemd-tool/initrd-build.sh command=do_secret_clean
 
-# enable root password login (dropbear only. Remove -s from ExecStart in 
-# initrd-dropbear.service too)
-#InitrdBuild=/usr/lib/mkinitcpio-systemd-tool/initrd-build.sh command=do_root_login_enable
-
 # include ssh credentials
 InitrdPath=/root/.ssh/authorized_keys source=/root/.ssh/authorized_keys mode=600
 

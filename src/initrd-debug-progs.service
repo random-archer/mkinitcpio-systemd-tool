@@ -2,6 +2,9 @@
 
 # Provision additional resources for the debug shell
 
+# service dependencies:
+# - https://www.archlinux.org/packages/community/x86_64/mc/
+
 [Unit]
 Description=Initrd Debug Progs Service
 Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md

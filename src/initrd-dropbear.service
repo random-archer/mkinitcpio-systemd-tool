@@ -17,7 +17,7 @@
 # to regenerate host keys use: `ssh-keygen -A -m PEM`
 
 # service dependencies:
-# https://www.archlinux.org/packages/community/x86_64/dropbear/
+# - https://www.archlinux.org/packages/community/x86_64/dropbear/
 
 [Unit]
 Description=Initrd Dropbear Service
@@ -61,3 +61,15 @@ InitrdPath=/var/log/        create=yes
 InitrdPath=/var/log/btmp    create=yes
 InitrdPath=/var/log/wtmp    create=yes
 InitrdPath=/var/log/lastlog create=yes
+
+# note:
+# to enable root password login with dropbear,
+# provide system unit override with these lines uncommented:
+#
+#[Service] 
+#ExecStart=
+#ExecStart=/bin/dropbear -j -k -F
+#
+#[X-SystemdTool]
+#InitrdBuild=/usr/lib/mkinitcpio-systemd-tool/initrd-build.sh command=do_root_login_enable
+#
