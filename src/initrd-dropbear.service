@@ -31,12 +31,16 @@ Requires=initrd-shell.service
 Requires=initrd-network.service
 
 [Service]
+# use service unit override to select a different port
+Environment=SSHD_PORT=22
+#
 # dropbear options:
 # -s     Disable password logins.
 # -j     Disable local port forwarding.
 # -k     Disable remote port forwarding.
 # -F     Don't fork into background.
-ExecStart=/bin/dropbear -s -j -k -F
+# -p     Listen on specified TCP port
+ExecStart=/bin/dropbear -s -j -k -F -p ${SSHD_PORT}
 ExecReload=/bin/kill -HUP ${MAINPID}
 # dropbear reports 1 when exiting on SIGTERM
 SuccessExitStatus= 0 1
@@ -68,7 +72,7 @@ InitrdPath=/var/log/lastlog create=yes
 #
 #[Service] 
 #ExecStart=
-#ExecStart=/bin/dropbear -j -k -F
+#ExecStart=/bin/dropbear -j -k -F -p ${SSHD_PORT}
 #
 #[X-SystemdTool]
 #InitrdBuild=/usr/lib/mkinitcpio-systemd-tool/initrd-build.sh command=do_root_login_enable
