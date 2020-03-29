@@ -2,6 +2,7 @@ PREFIX ?= /usr/local
 SYSTEMD_SYSTEM_PATH ?= /usr/lib
 
 install:
+	install -vDm 644 src/*.conf -t $(DESTDIR)/etc/mkinitcpio-systemd-tool/config
 	install -vDm 644 src/fstab -t $(DESTDIR)/etc/mkinitcpio-systemd-tool/config
 	install -vDm 644 src/crypttab -t $(DESTDIR)/etc/mkinitcpio-systemd-tool/config
 	install -vDm 644 src/initrd-network.network -t $(DESTDIR)/etc/mkinitcpio-systemd-tool/network/
