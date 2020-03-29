@@ -27,7 +27,10 @@ Requires=initrd-shell.service
 Requires=initrd-network.service
 
 [Service]
-ExecStart=/usr/bin/busybox tcpsvd -v 0 22 /usr/bin/tinysshd -v /etc/tinyssh/sshkeydir
+# use service unit override to select a different port
+Environment=SSHD_PORT=22
+#
+ExecStart=/usr/bin/busybox tcpsvd -v 0 ${SSHD_PORT} /usr/bin/tinysshd -v /etc/tinyssh/sshkeydir
 Restart=always
 RestartSec=3s
 
