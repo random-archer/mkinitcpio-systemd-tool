@@ -2,10 +2,10 @@
 
 # Override Emergency Service
 
+# TODO does not work
+
 # the default reaction to several failed cryptsetup attempts is to isolate the emergency service
 # which results in loss of network and forced local interactive console - no good for ssh mode 
-# so for remote ssh/cryptsetup scenario we instead restart the boot sequence after a delay
-# and also optionally start the provided debug shell
 
 [Unit]
 Description=Initrd Emergency Service
@@ -15,21 +15,35 @@ DefaultDependencies=no
 Conflicts=shutdown.target
 Conflicts=rescue.service
 Before=shutdown.target
+Before=rescue.service
 Wants=initrd-debug-shell.service
 
 [Service]
-ExecStartPre=/bin/echo "Initrd Emergency Service"
-ExecStartPre=/bin/sh -c 'for step in 1 2 3; do echo -n "$step "; sleep 1; done; echo ".";'
-ExecStartPre=/usr/bin/systemctl daemon-reload
-ExecStartPre=/usr/bin/systemctl --job-mode=fail --no-block default
-ExecStart=/bin/true
 Type=idle
-StandardInput=null
-StandardOutput=journal+console
-StandardError=journal+console
-TTYPath=/dev/console
+# startup banner
+ExecStartPre=/bin/echo "### panic shell ###"
+# emergency console
+Environment=TERM=linux
+ExecStart=/bin/sh
+#
+Restart=on-failure
+RestartSec=3s
+#StandardInput=tty
+#StandardOutput=journal+console
+#StandardError=journal+console
+#TTYPath=/dev/console
+
+StandardInput=tty-force
+StandardOutput=inherit
+StandardError=inherit
+KillMode=process
+IgnoreSIGPIPE=no
+SendSIGHUP=yes
+
+[Install]
+
+# not used
 
 [X-SystemdTool]
 
-# override /usr/lib/systemd/system/emergency.service
-#InitrdPath=/etc/systemd/system/emergency.service source=/etc/systemd/system/initrd-emergency.service 
+# not used

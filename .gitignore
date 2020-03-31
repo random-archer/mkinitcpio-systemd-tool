@@ -8,3 +8,6 @@
 
 # image boot folder mount
 boot
+
+# image boot folder extract
+data

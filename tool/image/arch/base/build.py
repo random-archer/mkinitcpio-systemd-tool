@@ -17,6 +17,7 @@ from arkon_config import build_epoch
 from arkon_config import image_base_url
 from arkon_config import project_repo
 from arkon_config import project_boot
+from arkon_config import project_data
 
 version_path = TOOL.date_path(build_epoch)
 version_dots = TOOL.date_dots(build_epoch)
@@ -63,6 +64,8 @@ SH("pacman --sync --needed --noconfirm "
    # developer support
    "mc "
    "htop "
+   "xterm "
+   "strace "
    # provide host sshd keys
    "openssh "
    # build/install deps
@@ -72,13 +75,13 @@ SH("pacman --sync --needed --noconfirm "
    # core package deps
    "linux "
    "mkinitcpio "
-   # dropbear service
+   # initrd-dropbear.service
    "dropbear "
-   # tinysshd service
+   # initrd-tinysshd.service
    "busybox "
    "tinyssh "
    "tinyssh-convert "
-   # cryptsetup service
+   # initrd-cryptsetup.service
    "cryptsetup "
 )
 
@@ -94,6 +97,9 @@ WITH(Bind=f"{project_repo}:/repo/")
 
 # expose boot dir
 WITH(Bind=f"{project_boot}/:/repo/boot/")
+
+# expose data dir
+WITH(Bind=f"{project_data}/:/repo/data/")
 
 # publish image
 PUSH()

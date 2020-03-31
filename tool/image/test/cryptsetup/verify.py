@@ -21,14 +21,18 @@ machine = Machine(machine_cryptsetup, this_dir)
 machine.install_tool()
 
 machine.service_enable_list([
+
     "initrd-cryptsetup.path",
+
+    "initrd-emergency.target",
+
     "initrd-debug-progs.service",
+
     "initrd-sysroot-mount.service",
+
 ])
 
-# machine.service_mask("systemd-udevd.service")
-
-machine.produce_boot_result()
+machine.perform_make_boot()
 
 path_list = [
 
@@ -46,7 +50,6 @@ path_list = [
     "/bin/swapon",
     "/bin/swapoff",
 
-
     "/usr/lib/modules/5.5.6-arch1-1/kernel/dm-crypt.ko",
 
     "/usr/lib/udev/rules.d/10-dm.rules",
@@ -59,7 +62,7 @@ path_list = [
     "/usr/lib/systemd/systemd-cryptsetup",
     "/usr/lib/systemd/system-generators/systemd-cryptsetup-generator",
     "/usr/lib/systemd/system-generators/systemd-fstab-generator",
-    
+
 ]
 
 link_list = [
@@ -68,7 +71,7 @@ link_list = [
 
     "/etc/systemd/system/sysinit.target.wants/initrd-cryptsetup.path",
     "/etc/systemd/system/sysinit.target.wants/initrd-debug-progs.service",
-    
+
     "/etc/systemd/system/initrd-root-fs.target.wants/initrd-sysroot-mount.service",
 
 ]
@@ -91,6 +94,10 @@ machine.assert_has_text_list(text_list)
 # FIXME
 #
 
-# machine.booter_initiate()
-# time.sleep(3)
-# machine.booter_terminate()
+machine.booter_qemu_initiate()
+time.sleep(5)
+machine.booter_qemu_terminate()
+
+# machine.booter_sysd_initiate()
+# time.sleep(5)
+# machine.booter_sysd_terminate()

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# build basic archux image
+# build cryptsetup image
 #
 
 from nspawn.build import *

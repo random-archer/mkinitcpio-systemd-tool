@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# setup dropbear machine
+# setup tinysshd machine
 #
 
 from nspawn.setup import *

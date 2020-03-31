@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# build in batch
+# build in batch for manual testing before commit
 #
 
 import os
@@ -13,11 +13,21 @@ image_list = [
     "cryptsetup",
     "dropbear",
     "tinysshd",
+    "unitada",
 ]
 
 for image in image_list:
-    print(f"build: {image}")
-    image_root = f"{this_dir}/{image}"
-    os.system(f"{image_root}/build.py")
-    os.system(f"{image_root}/setup.py")
-    os.system(f"{image_root}/verify.py")
+    print(f"@@@ build: {image}")
+    image_base = f"{this_dir}/{image}"
+    command_list = [
+        (f"{image_base}/build.py", 1),
+        (f"{image_base}/setup.py", 1),
+        (f"{image_base}/verify.py", 1),
+    ]
+    for command, settle_time in command_list:
+        print(f"@@@ command: {command}")
+        result = os.system(command)
+        assert result == 0, f"failure: {command}"
+        time.sleep(settle_time)
+
+print(f"@@@ finish")

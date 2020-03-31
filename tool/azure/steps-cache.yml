@@ -14,14 +14,14 @@ steps:
 - task: CacheBeta@1
   inputs:
     key: nspawn|archive|${{ parameters.cache_version }}
-    path: /var/lib/nspawn/archive/archive.archlinux.org
+    path: $(HOME)/nspawn/archive
     cacheHitVar: HAS_CACHE_ARCHIVE
   displayName: cache @ archive
 #
 - task: CacheBeta@1
   inputs:
     key: nspawn|arch-base|${{ parameters.cache_version }}
-    path: /var/lib/nspawn/archive/localhost/var/lib/nspawn_systemd_tool/arch-base
+    path: $(HOME)/nspawn/systemd_tool/arch-base
     cacheHitVar: HAS_CACHE_ARCH_BASE
   displayName: cache @ arch-base
 #

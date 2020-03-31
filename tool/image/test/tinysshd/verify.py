@@ -25,7 +25,7 @@ machine.service_enable_list([
     "initrd-tinysshd.service",
 ])
 
-machine.produce_boot_result()
+machine.perform_make_boot()
 
 path_list = [
 
