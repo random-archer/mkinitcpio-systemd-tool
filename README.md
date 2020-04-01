@@ -1,28 +1,20 @@
-```diff
-- WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING -
-```
-
-You will experience problems due to migration of this project form "aur" to "community" repository.
-
-Please track problems/solutions here: https://github.com/random-archer/mkinitcpio-systemd-tool/issues/32
-
-```diff
-- WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING -
-```
-
 ##### This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
 
 ## mkinitcpio-systemd-tool
 
 [![Master Status](https://dev.azure.com/random-archer/mkinitcpio-systemd-tool/_apis/build/status/random-archer.mkinitcpio-systemd-tool?branchName=master)](https://dev.azure.com/random-archer/mkinitcpio-systemd-tool/_build/latest?definitionId=1&branchName=master)
 
-Never write another mkinitcpio hook again, use systemd-tool.
-
 ### Summary 
 
-Provisioning tool for systemd in initramfs (systemd-tool)
+<details>
+<summary>
+  <b>Never write another mkinitcpio hook again: use systemd-tool.</b>
+</summary>
+<br/>
 
-mkinitcpio hook name: `systemd-tool`
+Provisioning tool for systemd in initramfs (systemd-tool):
+
+#### mkinitcpio hook name: `systemd-tool`
 
 Core features provided by the hook:
 * unified systemd + mkinitcpio configuration
@@ -35,6 +27,8 @@ Features provided by the included service units:
 * interactive user shell
 * remote ssh access in initrd
 * cryptsetup + custom password agent 
+
+</details>
 
 ### Issues
 
@@ -75,7 +69,7 @@ lsinitcpio -x /boot/initramfs-linux.img
 systemctl reboot
 ```
 
-### Details
+### Install Details
 
 `pacman` install actions:
 * take a look in [arch repo](https://git.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/mkinitcpio-systemd-tool) 
