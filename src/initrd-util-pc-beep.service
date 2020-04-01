@@ -1,0 +1,27 @@
+# This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
+
+# Provide PC Beeper sound during initramfs boot.
+
+# service dependencies:
+# - https://www.archlinux.org/packages/extra/x86_64/beep/
+
+[Unit]
+Description=Initrd Beeper Service
+ConditionPathExists=/etc/initrd-release
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStartPre=/usr/bin/beep -f 700 -r 3 -d 50 -l 200
+ExecStart=/bin/true
+
+[Install]
+WantedBy=sysinit.target
+
+[X-SystemdTool]
+
+# provision beeper components
+# https://wiki.archlinux.org/index.php/PC_speaker#Beep
+InitrdBinary=/usr/bin/beep
+InitrdCall=add_module pcspkr

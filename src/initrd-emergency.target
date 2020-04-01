@@ -2,7 +2,7 @@
 
 # Override Emergency Target
 
-# TODO does not work
+# TODO add ssh server dependency
 
 # the default reaction to several failed cryptsetup attempts is to isolate the emergency service
 # which results in loss of network and forced local interactive console - no good for ssh mode 
