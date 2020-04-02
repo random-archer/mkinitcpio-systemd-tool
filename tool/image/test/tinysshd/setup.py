@@ -13,11 +13,11 @@ import sys
 project_root = os.popen("git rev-parse --show-toplevel").read().strip()
 python_module = f"{project_root}/tool/module"
 sys.path.insert(0, python_module)
-from arkon_config import machine_tinysshd
-from arkon_config import image_tinysshd_url
+from arkon_config import tinysshd_machine
+from arkon_config import tinysshd_image_url
 
 # invoke image identity
-IMAGE(url=image_tinysshd_url)
+IMAGE(url=tinysshd_image_url)
 
 # container name
-MACHINE(name=machine_tinysshd)
+MACHINE(name=tinysshd_machine)

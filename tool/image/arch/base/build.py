@@ -14,7 +14,7 @@ project_root = os.popen("git rev-parse --show-toplevel").read().strip()
 python_module = f"{project_root}/tool/module"
 sys.path.insert(0, python_module)
 from arkon_config import build_epoch
-from arkon_config import image_base_url
+from arkon_config import base_image_url
 from arkon_config import project_repo
 from arkon_config import project_boot
 from arkon_config import project_data
@@ -29,7 +29,7 @@ booter_url = f"{archux_url}/iso/{version_dots}/archlinux-bootstrap-{version_dots
 mirror_url = f"{archux_url}/repos/{version_path}/$repo/os/$arch"
 
 # declare image identity
-IMAGE(url=image_base_url)
+IMAGE(url=base_image_url)
 
 # provision dependency image
 PULL(url=booter_url)

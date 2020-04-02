@@ -13,14 +13,14 @@ import sys
 project_root = os.popen("git rev-parse --show-toplevel").read().strip()
 python_module = f"{project_root}/tool/module"
 sys.path.insert(0, python_module)
-from arkon_config import image_base_url
-from arkon_config import image_unitada_url
+from arkon_config import base_image_url
+from arkon_config import unitada_image_url
 
 # declare image identity
-IMAGE(url=image_unitada_url)
+IMAGE(url=unitada_image_url)
 
 # provision dependency image
-PULL(url=image_base_url)
+PULL(url=base_image_url)
 
 # copy local resources
 COPY("/etc")

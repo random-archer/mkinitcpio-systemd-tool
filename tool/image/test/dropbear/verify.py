@@ -14,15 +14,19 @@ this_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.popen("git rev-parse --show-toplevel").read().strip()
 python_module = f"{project_root}/tool/module"
 sys.path.insert(0, python_module)
-from arkon_config import machine_dropbear, Machine
+from arkon_config import dropbear_machine
+from machine_unit import MachineUnit
 
-machine = Machine(machine_dropbear, this_dir)
+machine = MachineUnit(dropbear_machine, this_dir)
 
-machine.install_tool()
+machine.install_this_tool()
 
 machine.service_enable_list([
+
     "initrd-cryptsetup.path",
+
     "initrd-dropbear.service",
+
 ])
 
 machine.perform_make_boot()
@@ -47,7 +51,7 @@ path_list = [
 link_list = [
 
     "/root/.profile",
-    
+
     "/etc/systemd/system/sysinit.target.wants/initrd-cryptsetup.path",
     "/etc/systemd/system/sysinit.target.wants/initrd-dropbear.service",
 
@@ -56,7 +60,7 @@ link_list = [
 text_list = [
 
     "/usr/lib/systemd/system/initrd-dropbear.service",
-    
+
 ]
 
 machine.assert_has_path_list(path_list)

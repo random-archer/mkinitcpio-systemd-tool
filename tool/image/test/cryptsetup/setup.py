@@ -13,17 +13,17 @@ import sys
 project_root = os.popen("git rev-parse --show-toplevel").read().strip()
 python_module = f"{project_root}/tool/module"
 sys.path.insert(0, python_module)
-from arkon_config import machine_cryptsetup
-from arkon_config import image_cryptsetup_url
+from arkon_config import cryptsetup_machine
+from arkon_config import cryptsetup_image_url
 
 # discover network interface
 network_face = TOOL.select_interface()
 
 # invoke image identity
-IMAGE(url=image_cryptsetup_url)
+IMAGE(url=cryptsetup_image_url)
 
 # container name
-MACHINE(name=machine_cryptsetup)
+MACHINE(name=cryptsetup_machine)
 
 # WITH(
 #     MACVLAN=network_face,

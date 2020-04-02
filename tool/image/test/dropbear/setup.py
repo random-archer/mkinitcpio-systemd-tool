@@ -13,11 +13,11 @@ import sys
 project_root = os.popen("git rev-parse --show-toplevel").read().strip()
 python_module = f"{project_root}/tool/module"
 sys.path.insert(0, python_module)
-from arkon_config import machine_dropbear
-from arkon_config import image_dropbear_url
+from arkon_config import dropbear_machine
+from arkon_config import dropbear_image_url
 
 # invoke image identity
-IMAGE(url=image_dropbear_url)
+IMAGE(url=dropbear_image_url)
 
 # container name
-MACHINE(name=machine_dropbear)
+MACHINE(name=dropbear_machine)
