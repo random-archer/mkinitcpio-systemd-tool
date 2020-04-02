@@ -11,6 +11,10 @@ trigger:
 pr:
 - '*'
 #
+variables:
+# non-bufered stdout/stderr
+  PYTHONUNBUFFERED: 1
+#
 jobs:
 #
 - job: basic_build
@@ -41,7 +45,7 @@ jobs:
 #
   - template: tool/azure/steps-cache.yml
     parameters: # change to reset cache
-      cache_version: V15
+      cache_version: V16
 #
   - bash: env|sort|grep CACHE
     displayName: review caches
@@ -49,7 +53,7 @@ jobs:
   - template: tool/azure/steps-image.yml
     parameters: # conditional cached build
       image_path: arch/base
-      has_active: or(eq(variables.HAS_CACHE_ARCHIVE, 'false'),eq(variables.HAS_CACHE_ARCH_BASE, 'false'))
+      has_active: or(eq(variables.HAS_CACHE_ARCHIVE, 'false'),eq(variables.HAS_CACHE_RESOURCE, 'false'))
 #
   - template: tool/azure/steps-image.yml
     parameters:

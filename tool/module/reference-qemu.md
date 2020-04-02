@@ -1,0 +1,2 @@
+
+### qemu notes

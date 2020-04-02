@@ -14,15 +14,19 @@ this_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.popen("git rev-parse --show-toplevel").read().strip()
 python_module = f"{project_root}/tool/module"
 sys.path.insert(0, python_module)
-from arkon_config import machine_tinysshd, Machine
+from arkon_config import tinysshd_machine
+from machine_unit import MachineUnit
 
-machine = Machine(machine_tinysshd, this_dir)
+machine = MachineUnit(tinysshd_machine, this_dir)
 
-machine.install_tool()
+machine.install_this_tool()
 
 machine.service_enable_list([
+
     "initrd-cryptsetup.path",
+
     "initrd-tinysshd.service",
+
 ])
 
 machine.perform_make_boot()

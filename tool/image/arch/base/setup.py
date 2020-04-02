@@ -13,11 +13,11 @@ import sys
 project_root = os.popen("git rev-parse --show-toplevel").read().strip()
 python_module = f"{project_root}/tool/module"
 sys.path.insert(0, python_module)
-from arkon_config import image_base_url
-from arkon_config import machine_base
+from arkon_config import base_image_url
+from arkon_config import base_machine
 
 # invoke image identity
-IMAGE(url=image_base_url)
+IMAGE(url=base_image_url)
 
 # container name
-MACHINE(name=machine_base)
+MACHINE(name=base_machine)

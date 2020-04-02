@@ -14,11 +14,12 @@ this_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.popen("git rev-parse --show-toplevel").read().strip()
 python_module = f"{project_root}/tool/module"
 sys.path.insert(0, python_module)
-from arkon_config import machine_cryptsetup, Machine
+from arkon_config import cryptsetup_machine
+from machine_unit import MachineUnit
 
-machine = Machine(machine_cryptsetup, this_dir)
+machine = MachineUnit(cryptsetup_machine, this_dir)
 
-machine.install_tool()
+machine.install_this_tool()
 
 machine.service_enable_list([
 

@@ -14,15 +14,19 @@ this_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.popen("git rev-parse --show-toplevel").read().strip()
 python_module = f"{project_root}/tool/module"
 sys.path.insert(0, python_module)
-from arkon_config import machine_unitada, Machine
+from arkon_config import unitada_machine
+from machine_unit import MachineUnit
 
-machine = Machine(machine_unitada, this_dir)
+machine = MachineUnit(unitada_machine, this_dir)
 
-machine.install_tool()
+machine.install_this_tool()
 
 machine.service_enable_list([
+
     "root-entry.mount",
+
     "initrd-util-usb-hcd.service",
+
 ])
 
 machine.perform_make_boot()
@@ -30,7 +34,7 @@ machine.perform_make_boot()
 path_list = [
 
     "/etc/systemd/system/root-entry.mount",
-    
+
     "/etc/modprobe.d/initrd-util-usb-hcd.conf",
 
 ]

@@ -9,14 +9,13 @@ set -e
 echo "### ubuntu refresh"
 sudo apt-get -y update
 
-#echo "### setup qemu"
-sudo apt-get -y install qemu-system-x86 cpu-checker
+echo "### ubuntu install"
+sudo apt-get -y install \
+    qemu-system-x86 cpu-checker \
+    attr pigz systemd-container \
 
-#echo "### report qemu/kvm"
+echo "### report qemu/kvm"
 sudo kvm-ok || true
-
-echo "### setup systemd"
-sudo apt-get -y install attr pigz systemd-container
 
 echo "### setup python"
 pip install nspawn tox

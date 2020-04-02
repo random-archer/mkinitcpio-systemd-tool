@@ -20,8 +20,8 @@ steps:
 #
 - task: CacheBeta@1
   inputs:
-    key: nspawn|arch-base|${{ parameters.cache_version }}
-    path: $(HOME)/nspawn/systemd_tool/arch-base
-    cacheHitVar: HAS_CACHE_ARCH_BASE
-  displayName: cache @ arch-base
+    key: nspawn|resource|${{ parameters.cache_version }}
+    path: $(HOME)/nspawn/resource
+    cacheHitVar: HAS_CACHE_RESOURCE
+  displayName: cache @ resource
 #
