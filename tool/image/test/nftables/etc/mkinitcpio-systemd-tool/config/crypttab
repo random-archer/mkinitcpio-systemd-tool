@@ -1,0 +1,19 @@
+# This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
+
+# crypttab: mappings for encrypted partitions in initramfs
+# file location in real root: /etc/mkinitcpio-systemd-tool/config/crypttab
+# file location in initramfs: /etc/crypttab
+
+# crypttab format:
+# https://wiki.archlinux.org/index.php/Dm-crypt/System_configuration#crypttab
+
+# how crypttab is used by systemd
+# https://www.freedesktop.org/software/systemd/man/systemd-cryptsetup-generator.html
+# https://github.com/systemd/systemd/blob/master/src/cryptsetup/cryptsetup-generator.c
+
+# note: use password=none to force cryptsetup password agent prompt
+
+# provide here mapper partition UUID (instead of kernel command line)
+
+# <mapper-name>   <block-device>       <password/keyfile>   <crypto-options>
+booter_root   UUID=00000000-feed-face-0000-added0facade  none  luks,x-systemd.device-timeout=10s

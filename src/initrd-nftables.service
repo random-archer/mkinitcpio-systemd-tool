@@ -1,0 +1,26 @@
+# This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
+
+# note:
+# TODO
+
+# service dependencies:
+# - https://www.archlinux.org/packages/community/x86_64/nftables
+
+[Unit]
+# TODO
+Requires=nftables.service
+
+[Service]
+# TODO
+Type=oneshot
+RemainAfterExit=true
+ExecStart=/bin/true
+
+[Install]
+# activate by reverse dependency
+WantedBy=initrd-network.service
+
+[X-SystemdTool]
+
+# TODO
+InitrdPath=/etc/initrd-nftables.conf source=/etc/mkinitcpio-systemd-tool/config/initrd-nftables.conf

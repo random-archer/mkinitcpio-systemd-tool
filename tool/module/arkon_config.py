@@ -79,6 +79,11 @@ tinysshd_machine = "test-tinysshd"
 tinysshd_image_path = f"{image_store}/{tinysshd_machine}/default.tar.gz"
 tinysshd_image_url = f"file://localhost/{tinysshd_image_path}"
 
+# unit test: nftables
+nftables_machine = "test-nftables"
+nftables_image_path = f"{image_store}/{nftables_machine}/default.tar.gz"
+nftables_image_url = f"file://localhost/{nftables_image_path}"
+
 # unit test: anything else
 unitada_machine = "test-unitada"
 unitada_image_path = f"{image_store}/{unitada_machine}/default.tar.gz"
