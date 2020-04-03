@@ -3,6 +3,8 @@
 #
 # build basic archux image
 #
+# note:
+# * using azure cache, update `azure.yml/.../cache_version` when changing this file
 
 from nspawn.build import *
 
@@ -69,9 +71,7 @@ SH("pacman --sync --needed --noconfirm "
    # provide host sshd keys
    "openssh "
    # build/install deps
-   "sed "
-   "grep "
-   "make "
+   "base-devel "
    # core package deps
    "linux "
    "mkinitcpio "
@@ -83,6 +83,8 @@ SH("pacman --sync --needed --noconfirm "
    "tinyssh-convert "
    # initrd-cryptsetup.service
    "cryptsetup "
+   # initrd-nftables.service
+   "nftables "
 )
 
 # enable services

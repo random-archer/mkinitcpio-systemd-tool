@@ -1,25 +1,24 @@
 #!/usr/bin/env bash
 
 #
-# runs inside machine, imitates:
-#
-# pacman -S mkinitcpio-systemd-tool
+# runs inside machine
 #
 
 set -e
 
-echo "### manual-install.sh::backup"
+source="/repo"
+target="/tmp/repo"
 
-cp -f -r /etc/mkinitcpio-systemd-tool/. /etc/mkinitcpio-systemd-tool.bak/
+rm -r -f $target
 
-echo "### manual-install.sh::install"
+mkdir -p $target
 
-# code repository bind
-cd /repo
+cp -f -a $source/. $target
 
-# conde install from repository
-make PREFIX=/usr install
+chown -R nobody  $target
 
-echo "### manual-install.sh::restore"
+cd $target
 
-cp -f -r /etc/mkinitcpio-systemd-tool.bak/. /etc/mkinitcpio-systemd-tool/
+sudo -u nobody makepkg -e
+
+pacman --noconfirm -U *.pkg.tar.xz
