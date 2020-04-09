@@ -2,9 +2,10 @@
 
 #
 # produce cryptsetup sysroot disk(s)
-#
 # these disk(s) are mounted as /sysroot inside initramfs container
 #
+# note:
+# * using azure cache, update `azure.yml/.../cache_version` when changing this file
 
 import os
 import time

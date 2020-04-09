@@ -21,3 +21,6 @@ IMAGE(url=dropbear_image_url)
 
 # container name
 MACHINE(name=dropbear_machine)
+
+# configure machine ssh access
+WITH(BindReadOnly="/root/.ssh/authorized_keys")

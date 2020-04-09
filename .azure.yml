@@ -45,7 +45,7 @@ jobs:
 #
   - template: tool/azure/steps-cache.yml
     parameters: # change to reset cache
-      cache_version: V16
+      cache_version: V17
 #
   - bash: env|sort|grep CACHE
     displayName: review caches
@@ -70,6 +70,10 @@ jobs:
   - template: tool/azure/steps-image.yml
     parameters:
       image_path: test/unitada
+#
+  - template: tool/azure/steps-image.yml
+    parameters:
+      image_path: test/nftables
 #
   - bash: machinectl --all --full
     displayName: review machines

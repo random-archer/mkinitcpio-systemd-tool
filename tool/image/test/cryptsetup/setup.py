@@ -29,3 +29,6 @@ MACHINE(name=cryptsetup_machine)
 #     MACVLAN=network_face,
 #     Capability='all',
 # )
+
+# configure machine ssh access
+WITH(BindReadOnly="/root/.ssh/authorized_keys")

@@ -1,0 +1,35 @@
+# This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
+
+# Provides firewall when running inside initrd
+# see: https://wiki.archlinux.org/index.php/Nftables
+
+# service dependencies:
+# - https://www.archlinux.org/packages/community/x86_64/nftables
+
+[Unit]
+Description=Initrd Firewall Service
+Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md
+ConditionPathExists=/etc/initrd-release
+DefaultDependencies=no
+Before=initrd-network.service
+
+[Service]
+# reproduce default nftables.service
+Type=oneshot
+ExecStart=/usr/bin/nft -f /etc/nftables.conf
+ExecReload=/usr/bin/nft flush ruleset ';' include '"/etc/nftables.conf"'
+ExecStop=/usr/bin/nft flush ruleset
+RemainAfterExit=yes
+
+[Install]
+# activate by reverse dependency
+WantedBy=initrd-network.service
+
+[X-SystemdTool]
+
+# include nftables binaries
+InitrdCall=add_all_modules /netfilter/nft_*
+InitrdCall=add_all_modules /netfilter/nf_tables*
+
+# provision firewall settings in initrd
+InitrdPath=/etc/nftables.conf source=/etc/mkinitcpio-systemd-tool/config/initrd-nftables.conf   replace=yes

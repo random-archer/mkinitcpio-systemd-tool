@@ -15,21 +15,21 @@ project_root = os.popen("git rev-parse --show-toplevel").read().strip()
 python_module = f"{project_root}/tool/module"
 sys.path.insert(0, python_module)
 from arkon_config import kernel_version
-from arkon_config import cryptsetup_machine
+from arkon_config import nftables_machine
 from machine_unit import MachineUnit
 
-machine = MachineUnit(cryptsetup_machine, this_dir)
+machine = MachineUnit(nftables_machine, this_dir)
 
 machine.install_this_tool()
 
 machine.service_enable_list([
 
     "initrd-cryptsetup.path",
+    "initrd-tinysshd.service",
+    "initrd-nftables.service",
 
     "initrd-emergency.target",
-
     "initrd-debug-progs.service",
-
     "initrd-sysroot-mount.service",
 
 ])
@@ -40,30 +40,17 @@ path_list = [
 
     "/usr/lib/systemd/system/initrd-cryptsetup.path",
     "/usr/lib/systemd/system/initrd-cryptsetup.service",
-
+    "/usr/lib/systemd/system/initrd-tinysshd.service",
+    "/usr/lib/systemd/system/initrd-network.service",
     "/usr/lib/systemd/system/initrd-shell.service",
-
-    "/usr/lib/systemd/system/initrd-sysroot-mount.service",
-
-    "/root/.ssh/authorized_keys",
-    "/usr/lib/mkinitcpio-systemd-tool/initrd-shell.sh",
-
-    "/bin/dmsetup",
-    "/bin/swapon",
-    "/bin/swapoff",
 
     f"/usr/lib/modules/{kernel_version}/kernel/dm-crypt.ko",
 
-    "/usr/lib/udev/rules.d/10-dm.rules",
-    "/usr/lib/udev/rules.d/11-dm-initramfs.rules",
-    "/usr/lib/udev/rules.d/13-dm-disk.rules",
-    "/usr/lib/udev/rules.d/95-dm-notify.rules",
-
-    "/usr/lib/systemd/system/cryptsetup.target",
-    "/usr/lib/systemd/system/cryptsetup-pre.target",
-    "/usr/lib/systemd/systemd-cryptsetup",
-    "/usr/lib/systemd/system-generators/systemd-cryptsetup-generator",
-    "/usr/lib/systemd/system-generators/systemd-fstab-generator",
+    "/etc/nftables.conf",
+    "/usr/bin/nft",
+    "/usr/lib/systemd/system/initrd-nftables.service",
+    f"/usr/lib/modules/{kernel_version}/kernel/nf_tables.ko",
+    f"/usr/lib/modules/{kernel_version}/kernel/nft_socket.ko",
 
 ]
 
@@ -76,15 +63,15 @@ link_list = [
 
     "/etc/systemd/system/initrd-root-fs.target.wants/initrd-sysroot-mount.service",
 
+    "/etc/systemd/system/sysinit.target.wants/initrd-tinysshd.service",
+
+    "/etc/systemd/system/initrd-network.service.wants/initrd-nftables.service",
+
 ]
 
 text_list = [
 
-    "/etc/crypttab",
-    "/etc/fstab",
-
-    "/usr/lib/systemd/system/initrd-cryptsetup.path",
-    "/usr/lib/systemd/system/initrd-cryptsetup.service",
+    # TODO add texts to assert
 
 ]
 
@@ -92,14 +79,12 @@ machine.assert_has_path_list(path_list)
 machine.assert_has_link_list(link_list)
 machine.assert_has_text_list(text_list)
 
-#
-# FIXME
-#
-
 machine.booter_qemu_initiate()
-time.sleep(5)
-machine.booter_qemu_terminate()
 
-# machine.booter_sysd_initiate()
-# time.sleep(5)
-# machine.booter_sysd_terminate()
+# wait for qemu start
+# TODO use wait-for-condition
+time.sleep(5)
+
+# FIXME add tests against qemu instance, i.e. try netcat into firewall
+
+machine.booter_qemu_terminate()

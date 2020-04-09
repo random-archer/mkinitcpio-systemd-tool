@@ -27,6 +27,9 @@ linux_kernel = f"/boot/vmlinuz-linux"
 # well known system path
 linux_initrd = f"/boot/initramfs-linux.img"
 
+# location of this file
+this_dir = os.path.dirname(os.path.abspath(__file__))
+
 
 class HostAny(abc.ABC):
     "conatainer manager prototype"
@@ -100,12 +103,14 @@ class HostSYSD(HostAny):
         )
 
 
+# note: ensure virtio drivers are present in the guest
 class HostQEMU(HostAny):
     "quemu container host"
 
     command = "qemu-system-x86_64"
     kernel = f"{project_repo}{linux_kernel}"
     initrd = f"{project_repo}{linux_initrd}"
+    link_addr = "52:54:12:34:56:78"
     monitor_addr = "127.0.0.1"
     monitor_port = "51234"
 
@@ -123,7 +128,6 @@ class HostQEMU(HostAny):
         )
 
     def command_initiate(self) -> str:
-        # note: ensure virtio drivers are present in the guest
         qemu_cpu_mode = f"-cpu host -enable-kvm " if self.has_kernel_kvm() else ""
         return (
             f"sudo "
@@ -134,6 +138,14 @@ class HostQEMU(HostAny):
             f"-kernel {self.kernel} "
             f"-initrd {self.initrd} "
             f"-m 512 -smp 2 "
+
+            f"-device e1000,netdev=net0,mac={self.link_addr} "
+            f"-netdev user,id=net0,net=192.168.123.0/24,hostfwd=tcp::22022-:22 "
+
+# TODO
+#             f"-device virtio-net,netdev=net1 "
+#             f"-netdev tap,id=net1,ifname=QTAP,script=no,downscript=no "
+
             f"-drive if=virtio,cache=none,format=raw,file={self.sysroot_path} "
             f"-append 'edd=off console=ttyS0 TERM=xterm SYSTEMD_COLORS=0' "
             f"-nographic -serial mon:stdio "
@@ -357,6 +369,8 @@ class MachineUnit:
         print()
         self.sysroot.produce_media()
         print(f"### initrd image: qemu: activate")
+# TODO
+#         os.system(f"{this_dir}/qemu-tap-activate.sh")
         command = self.host_qemu.command_initiate()
         self.booter_initiate_thread(command)
 
@@ -368,3 +382,5 @@ class MachineUnit:
         print(f"### initrd image: qemu: deactivate")
         command = self.host_qemu.command_terminate()
         os.system(command)
+# TODO
+#         os.system(f"{this_dir}/qemu-tap-deactivate.sh")

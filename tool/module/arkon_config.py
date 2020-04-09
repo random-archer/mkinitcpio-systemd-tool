@@ -21,7 +21,7 @@ if has_ci_azure():
     nspawn.CONFIG['proxy']['use_machine_proxy'] = 'no'
 
 # report state of non-bufered stdout/stderr
-print(f"### PYTHONUNBUFFERED: {os.environ.get('PYTHONUNBUFFERED', None)}")
+print(f"### PYTHONUNBUFFERED={os.environ.get('PYTHONUNBUFFERED', None)}")
 
 # location of machine resources
 nspawn_store = nspawn.CONFIG['storage']["root"]
@@ -31,6 +31,9 @@ this_dir = os.path.dirname(os.path.abspath(__file__))
 
 # arch linux archive iso image date
 build_epoch = datetime.datetime(year=2020, month=3, day=1)
+
+# kernel version used by arch linux archive iso
+kernel_version = f"5.5.6-arch1-1"
 
 # current user account
 host_user = os.getenv('USER', "root")
@@ -78,6 +81,11 @@ dropbear_image_url = f"file://localhost/{dropbear_image_path}"
 tinysshd_machine = "test-tinysshd"
 tinysshd_image_path = f"{image_store}/{tinysshd_machine}/default.tar.gz"
 tinysshd_image_url = f"file://localhost/{tinysshd_image_path}"
+
+# unit test: nftables
+nftables_machine = "test-nftables"
+nftables_image_path = f"{image_store}/{nftables_machine}/default.tar.gz"
+nftables_image_url = f"file://localhost/{nftables_image_path}"
 
 # unit test: anything else
 unitada_machine = "test-unitada"
