@@ -25,11 +25,12 @@ WantedBy=initrd-debug-shell.service
 
 # debug tools
 InitrdBinary=/usr/bin/strace optional=yes
+InitrdBinary=/usr/bin/cryptsetup optional=yes
 
 # systemd tools
 InitrdBinary=/usr/bin/journalctl
 InitrdBinary=/usr/bin/less replace=yes
-#InitrdBinary=/usr/bin/systemd-analyze 
+#InitrdBinary=/usr/bin/systemd-analyze
 
 # midnight commander
 InitrdBinary=/usr/bin/mc
