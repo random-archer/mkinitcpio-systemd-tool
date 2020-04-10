@@ -1,16 +1,19 @@
 # This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
 
 # intelli-j
-.idea
+.idea/
 
 # eclipse meta data
 .project
-
-# python ide config
 .pydevproject
+.settings/
 
 # image boot folder mount
-boot
+boot/
 
 # image boot folder extract
-data
+data/
+
+# local package install resources
+pkg/
+*.pkg.tar.xz

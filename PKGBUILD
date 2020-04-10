@@ -1,5 +1,14 @@
 #
-# manual build: cd $repo ; makepkg -e ;
+# Developer support: allow local install
+#
+# note: keep in sync with package maintainer origin:
+# https://git.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/mkinitcpio-systemd-tool
+#
+# manual package build and install steps:
+# * cd ${this_repo}
+# * makepkg -e
+# * sudo pacman -U *.pkg.tar.xz
+# * rm -r -f  pkg/ *.pkg.tar.xz
 #
 
 pkgname=mkinitcpio-systemd-tool
@@ -13,12 +22,15 @@ depends=('mkinitcpio' 'systemd')
 optdepends=('cryptsetup: for initrd-cryptsetup.service'
             'dropbear: for initrd-dropbear.service'
             'busybox: for initrd-tinysshd.service'
+            'mc: for initrd-debug-progs.service'
+            'nftables: for initrd-nftables.service'
             'tinyssh: for initrd-tinysshd.service'
-            'tinyssh-convert: for initrd-tinysshd.service'
-            'mc: for initrd-debug-progs.service')
+            'tinyssh-convert: for initrd-tinysshd.service')
 conflicts=('mkinitcpio-dropbear' 'mkinitcpio-tinyssh')
 backup=("etc/${pkgname}/config/crypttab"
         "etc/${pkgname}/config/fstab"
+        "etc/${pkgname}/config/initrd-nftables.conf"
+        "etc/${pkgname}/config/initrd-util-usb-hcd.conf"
         "etc/${pkgname}/network/initrd-network.network" )
 #source=("$pkgname-$pkgver.tar.gz::https://github.com/random-archer/${pkgname}/archive/v${pkgver}.tar.gz")
 #install="${pkgname}.install"
