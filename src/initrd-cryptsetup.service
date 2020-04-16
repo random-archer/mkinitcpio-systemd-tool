@@ -24,9 +24,14 @@ After=initrd-shell.service
 After=cryptsetup-pre.target
 Before=cryptsetup.target
 Requires=initrd-shell.service
+# note: order to ensure plymouth wins when present
+After=plymouth-start.service
+# note: plymouthd server intercepts /dev/console tty device
+ConditionPathExists=!/run/plymouth/pid
 
 [Service]
-ExecStart=/usr/lib/mkinitcpio-systemd-tool/initrd-shell.sh script_entry=service service_name=cryptsetup
+# invoke shell as service with "terminal" mode
+ExecStart=/usr/lib/mkinitcpio-systemd-tool/initrd-shell.sh script_entry=service service_name=crypto_terminal
 Restart=on-failure
 RestartSec=1s
 # successful crypto unlock is reported as 100
@@ -36,14 +41,24 @@ StandardOutput=inherit
 StandardError=inherit
 TTYPath=/dev/console
 
+[Install]
+# not used: activated on demand
+
 [X-SystemdTool]
 
-# provision disk tables in initramfs
-InitrdPath=/etc/crypttab source=/etc/mkinitcpio-systemd-tool/config/crypttab replace=yes
-InitrdPath=/etc/fstab    source=/etc/mkinitcpio-systemd-tool/config/fstab    replace=yes
+# disable default password agents
+InitrdPath=/usr/lib/systemd/system/systemd-ask-password-console.path   replace=yes create=yes
+InitrdPath=/usr/lib/systemd/system/systemd-ask-password-wall.path      replace=yes create=yes
 
-# provide folder for sysroot.mount 
+# provision disk tables in initramfs
+InitrdPath=/etc/crypttab source=/etc/mkinitcpio-systemd-tool/config/crypttab   replace=yes
+InitrdPath=/etc/fstab    source=/etc/mkinitcpio-systemd-tool/config/fstab      replace=yes
+
+# provide folder for sysroot.mount
 InitrdPath=/sysroot/    create=yes
+
+# provide folder expected by systemd-cryptsetup
+InitrdPath=/run/cryptsetup/    create=yes
 
 # include early swap support
 InitrdBinary=/usr/bin/swapon
@@ -54,7 +69,7 @@ InitrdBinary=/usr/bin/dmsetup
 InitrdCall=add_module dm-crypt
 InitrdCall=add_all_modules /crypto/
 
-# include cryptsetup udev rules 
+# include cryptsetup udev rules
 InitrdPath=/usr/lib/udev/rules.d/10-dm.rules
 InitrdPath=/usr/lib/udev/rules.d/11-dm-initramfs.rules source=/usr/lib/initcpio/udev/11-dm-initramfs.rules
 InitrdPath=/usr/lib/udev/rules.d/13-dm-disk.rules

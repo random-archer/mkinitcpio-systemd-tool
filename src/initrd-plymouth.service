@@ -1,0 +1,58 @@
+# This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
+
+# Provides crypto+plymouth support in initramfs
+# https://wiki.archlinux.org/index.php/plymouth
+# https://github.com/freedesktop/plymouth/blob/master/docs/development.txt
+
+# note:
+# this is a twin unit for initrd-plymouth.service
+# enable only initrd-plymouth.path, initrd-plymouth.service is activated on demand
+
+# note:
+# * switch between plymouthd server text-vs-gui mode by pressing "ESC" key on /dev/console
+
+# service dependencies:
+# https://aur.archlinux.org/packages/plymouth/
+
+[Unit]
+Description=Initrd Plymouth Service
+Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md
+ConditionPathExists=/etc/crypttab
+ConditionPathExists=/etc/fstab
+ConditionPathExists=/etc/initrd-release
+DefaultDependencies=no
+After=plymouth-start.service
+After=initrd-shell.service
+After=cryptsetup-pre.target
+Before=cryptsetup.target
+Requires=initrd-shell.service
+# respect plymouth kernel command line contract
+ConditionKernelCommandLine=!plymouth.enable=0
+
+[Service]
+# invoke shell as service with "plymouth" mode
+ExecStart=/usr/lib/mkinitcpio-systemd-tool/initrd-shell.sh script_entry=service service_name=crypto_plymouth
+Restart=on-failure
+RestartSec=1s
+# successful crypto unlock is reported as 100
+RestartPreventExitStatus=100
+StandardInput=tty
+StandardOutput=inherit
+StandardError=inherit
+TTYPath=/dev/console
+
+[Install]
+# not used: activated on demand
+
+[X-SystemdTool]
+
+# disable default password agents
+InitrdPath=/usr/lib/systemd/system/systemd-ask-password-plymouth.path      replace=yes create=yes
+InitrdPath=/usr/lib/systemd/system/systemd-ask-password-plymouth.service   replace=yes create=yes
+
+# plymouth client app
+InitrdBinary=/usr/bin/plymouth
+
+# TODO
+# remove dependency on sd-plymouth, provision these resources:
+# https://aur.archlinux.org/cgit/aur.git/tree/sd-plymouth.initcpio_install?h=plymouth

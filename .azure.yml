@@ -43,6 +43,9 @@ jobs:
   - script: tool/azure/setup.sh
     displayName: install deps
 #
+  - script: tool/azure/verify.sh
+    displayName: verify scripts
+#
   - template: tool/azure/steps-cache.yml
     parameters: # change to reset cache
       cache_version: V17
@@ -69,11 +72,11 @@ jobs:
 #
   - template: tool/azure/steps-image.yml
     parameters:
-      image_path: test/unitada
+      image_path: test/nftables
 #
   - template: tool/azure/steps-image.yml
     parameters:
-      image_path: test/nftables
+      image_path: test/unitada
 #
   - bash: machinectl --all --full
     displayName: review machines

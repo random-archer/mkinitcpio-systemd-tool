@@ -11,6 +11,9 @@
 # this is a twin unit for initrd-cryptsetup.service
 # enable only initrd-cryptsetup.path, initrd-cryptsetup.service is activated on demand
 
+# note:
+# mutually exclusive with initrd-plymouth.path
+
 # service dependencies:
 # https://www.archlinux.org/packages/core/x86_64/cryptsetup/
 
@@ -18,6 +21,7 @@
 Description=Initrd Cryptsetup Path
 Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md
 ConditionPathExists=/etc/crypttab
+ConditionPathExists=/etc/fstab
 ConditionPathExists=/etc/initrd-release
 DefaultDependencies=no
 Conflicts=shutdown.target
@@ -35,10 +39,7 @@ DirectoryNotEmpty=/run/systemd/ask-password
 WantedBy=sysinit.target
 
 [X-SystemdTool]
-
-# disable default password agents
-InitrdPath=/usr/lib/systemd/system/systemd-ask-password-console.path   replace=yes create=yes
-InitrdPath=/usr/lib/systemd/system/systemd-ask-password-wall.path      replace=yes create=yes
+# not used
 
 # /etc/systemd/system/initrd-cryptsetup.path.d/override.conf
 
