@@ -48,12 +48,10 @@ TTYPath=/dev/console
 [X-SystemdTool]
 
 # disable default password agents
-InitrdPath=/usr/lib/systemd/system/systemd-ask-password-console.path   replace=yes create=yes
-InitrdPath=/usr/lib/systemd/system/systemd-ask-password-wall.path      replace=yes create=yes
-
-# provision disk tables in initramfs
-InitrdPath=/etc/crypttab source=/etc/mkinitcpio-systemd-tool/config/crypttab   replace=yes
-InitrdPath=/etc/fstab    source=/etc/mkinitcpio-systemd-tool/config/fstab      replace=yes
+InitrdPath=/usr/lib/systemd/system/systemd-ask-password-console.path      replace=yes create=yes
+InitrdPath=/usr/lib/systemd/system/systemd-ask-password-console.service   replace=yes create=yes
+InitrdPath=/usr/lib/systemd/system/systemd-ask-password-wall.path         replace=yes create=yes
+InitrdPath=/usr/lib/systemd/system/systemd-ask-password-wall.servive      replace=yes create=yes
 
 # provide folder for sysroot.mount
 InitrdPath=/sysroot/    create=yes
@@ -62,8 +60,7 @@ InitrdPath=/sysroot/    create=yes
 InitrdPath=/run/cryptsetup/    create=yes
 
 # include early swap support
-InitrdBinary=/usr/bin/swapon
-InitrdBinary=/usr/bin/swapoff
+InitrdBinary=/usr/bin/mkswap
 
 # include cryptsetup binaries
 InitrdBinary=/usr/bin/dmsetup

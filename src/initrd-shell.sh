@@ -9,7 +9,7 @@
 # * implements minimal interactive menu
 # * implements password query/reply agent, see reference.md
 
-# https://github.com/koalaman/shellcheck
+# Using shell linter: https://github.com/koalaman/shellcheck
 # shellcheck shell=dash
 # shellcheck disable=SC1008 # This shebang was unrecognized
 # shellcheck disable=SC2169 # In dash, [[ ]] is not supported

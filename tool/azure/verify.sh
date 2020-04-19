@@ -13,3 +13,4 @@ ls -las "$repo_src"/*.sh
 
 echo "### shell check"
 shellcheck "$repo_src"/initrd-shell.sh
+shellcheck "$repo_src"/mkinitcpio-install.sh
