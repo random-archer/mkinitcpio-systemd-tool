@@ -48,6 +48,9 @@ path_list = [
     "/root/.ssh/authorized_keys",
     "/usr/lib/mkinitcpio-systemd-tool/initrd-shell.sh",
 
+    "/sysroot",
+    "/run/cryptsetup",
+
     "/bin/dmsetup",
     "/bin/swapon",
     "/bin/swapoff",
@@ -93,13 +96,9 @@ machine.assert_has_link_list(link_list)
 machine.assert_has_text_list(text_list)
 
 #
-# FIXME
+# FIXME implement full test
 #
 
 machine.booter_qemu_initiate()
 time.sleep(5)
 machine.booter_qemu_terminate()
-
-# machine.booter_sysd_initiate()
-# time.sleep(5)
-# machine.booter_sysd_terminate()

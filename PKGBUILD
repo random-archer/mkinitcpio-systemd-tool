@@ -5,10 +5,10 @@
 # https://git.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/mkinitcpio-systemd-tool
 #
 # manual package build and install steps:
-# * cd ${this_repo}
+# * cd "$this_repo"
+# * rm -r -f  pkg/ *.pkg.tar.xz
 # * makepkg -e
 # * sudo pacman -U *.pkg.tar.xz
-# * rm -r -f  pkg/ *.pkg.tar.xz
 #
 
 pkgname=mkinitcpio-systemd-tool

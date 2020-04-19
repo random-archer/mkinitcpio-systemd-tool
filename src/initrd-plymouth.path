@@ -1,0 +1,59 @@
+# This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
+
+# Provides crypto+plymouth support in initramfs
+# https://wiki.archlinux.org/index.php/plymouth
+# https://github.com/freedesktop/plymouth/blob/master/docs/development.txt
+
+# note:
+# experimental, see
+# * https://github.com/random-archer/mkinitcpio-systemd-tool/issues/59
+
+# note:
+# this is a twin unit for initrd-plymouth.service
+# enable only initrd-plymouth.path, initrd-plymouth.service is activated on demand
+
+# note:
+# requries sd-plymouth in /etc/mkinitcpio.conf::HOOKS
+# HOOKS=(base ... systemd sd-plymouth systemd-tool)
+
+# note:
+# mutually exclusive with initrd-cryptestup.path
+# when both initrd-cryptestup.path and initrd-plymouth.path are
+# enabled via `systemctl enable`, kernel command line controls selection:
+# `plymouth.enable=0` : will result in activation of initrd-cryptestup.path
+# `plymouth.enable=1` : will result in activation of initrd-plymouth.path
+
+# service dependencies:
+# https://aur.archlinux.org/packages/plymouth/
+
+[Unit]
+Description=Initrd Plymouth Path
+Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md
+ConditionPathExists=/etc/crypttab
+ConditionPathExists=/etc/fstab
+ConditionPathExists=/etc/initrd-release
+DefaultDependencies=no
+Conflicts=shutdown.target
+After=plymouth-start.service
+Before=basic.target shutdown.target
+Before=paths.target shutdown.target cryptsetup.target
+# respect plymouth kernel command line contract
+ConditionKernelCommandLine=!plymouth.enable=0
+# note: plymouthd server intercepts /dev/console tty device
+ConditionPathExists=/run/plymouth/pid
+
+[Path]
+# bind to the twin unit
+Unit=initrd-plymouth.service
+# create monitored folder when missing
+MakeDirectory=yes
+# activate twin unit when cryptsetup request files are present
+DirectoryNotEmpty=/run/systemd/ask-password
+
+[Install]
+WantedBy=sysinit.target
+
+[X-SystemdTool]
+
+# inherit cryptsetup resources
+InitrdUnit=initrd-cryptsetup.path

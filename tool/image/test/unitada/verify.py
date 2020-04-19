@@ -58,10 +58,11 @@ machine.assert_has_path_list(path_list)
 machine.assert_has_link_list(link_list)
 machine.assert_has_text_list(text_list)
 
+
 #
-# FIXME
+# FIXME implement full test
 #
 
-# machine.booter_initiate()
+# machine.booter_qemu_initiate()
 # time.sleep(5)
-# machine.booter_terminate()
+# machine.booter_qemu_terminate()
