@@ -12,6 +12,9 @@
 # enable only initrd-cryptsetup.path, initrd-cryptsetup.service is activated on demand
 
 # note:
+# remove `sd-encrypt` from HOOKS=()
+
+# note:
 # mutually exclusive with initrd-plymouth.path
 
 # service dependencies:
@@ -39,7 +42,10 @@ DirectoryNotEmpty=/run/systemd/ask-password
 WantedBy=sysinit.target
 
 [X-SystemdTool]
-# not used
+
+# provision disk tables in initramfs
+InitrdPath=/etc/crypttab   source=/etc/mkinitcpio-systemd-tool/config/crypttab   replace=yes
+InitrdPath=/etc/fstab      source=/etc/mkinitcpio-systemd-tool/config/fstab      replace=yes
 
 # /etc/systemd/system/initrd-cryptsetup.path.d/override.conf
 

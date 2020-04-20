@@ -32,6 +32,10 @@ InitrdBinary=/usr/bin/journalctl
 InitrdBinary=/usr/bin/less replace=yes
 #InitrdBinary=/usr/bin/systemd-analyze
 
+# early swap support
+InitrdBinary=/usr/bin/swapon    optional=yes
+InitrdBinary=/usr/bin/swapoff   optional=yes
+
 # midnight commander
 InitrdBinary=/usr/bin/mc
 InitrdBinary=/usr/bin/mcedit

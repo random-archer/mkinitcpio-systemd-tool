@@ -27,7 +27,7 @@ InitrdBinary=/usr/bin/systemd-cat
 InitrdBinary=/usr/bin/journalctl
 
 # configure login script
-InitrdLink=/root/.profile /usr/lib/mkinitcpio-systemd-tool/initrd-shell.sh
+InitrdLink=/root/.profile target=/usr/lib/mkinitcpio-systemd-tool/initrd-shell.sh
 
 # configure user settings
 InitrdPath=/etc/group  replace=yes
@@ -40,9 +40,9 @@ InitrdBuild=/usr/lib/mkinitcpio-systemd-tool/initrd-build.sh command=do_secret_c
 InitrdPath=/root/.ssh/authorized_keys source=/root/.ssh/authorized_keys mode=600
 
 # override system actions
-InitrdLink=/usr/bin/halt /usr/bin/systemctl
-InitrdLink=/usr/bin/reboot /usr/bin/systemctl
-InitrdLink=/usr/bin/shutdown /usr/bin/systemctl
+InitrdLink=/usr/bin/halt       target=/usr/bin/systemctl
+InitrdLink=/usr/bin/reboot     target=/usr/bin/systemctl
+InitrdLink=/usr/bin/shutdown   target=/usr/bin/systemctl
 
 # required by /etc/nsswitch.conf
 InitrdBinary=/usr/lib/libnss_compat.so optional=yes

@@ -52,8 +52,7 @@ path_list = [
     "/run/cryptsetup",
 
     "/bin/dmsetup",
-    "/bin/swapon",
-    "/bin/swapoff",
+    "/bin/mkswap",
 
     f"/usr/lib/modules/{kernel_version}/kernel/dm-crypt.ko",
 
