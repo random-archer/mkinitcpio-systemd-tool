@@ -77,7 +77,10 @@ link_list = [
     "/etc/systemd/system/sysinit.target.wants/initrd-cryptsetup.path",
     "/etc/systemd/system/sysinit.target.wants/initrd-debug-progs.service",
 
+    "/usr/lib/systemd/system/sysinit.target.wants/cryptsetup.target",
+
     "/etc/systemd/system/initrd-root-fs.target.wants/initrd-sysroot-mount.service",
+
 
 ]
 
