@@ -55,6 +55,7 @@ path_list = [
     "/bin/mkswap",
 
     f"/usr/lib/modules/{kernel_version}/kernel/dm-crypt.ko",
+    f"/usr/lib/modules/{kernel_version}/kernel/dm-integrity.ko",
 
     "/usr/lib/udev/rules.d/10-dm.rules",
     "/usr/lib/udev/rules.d/11-dm-initramfs.rules",
