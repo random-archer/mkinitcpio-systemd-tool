@@ -64,6 +64,7 @@ InitrdBinary=/usr/bin/mkswap
 # include cryptsetup binaries
 InitrdBinary=/usr/bin/dmsetup
 InitrdCall=add_module dm-crypt
+InitrdCall=add_module dm-integrity
 InitrdCall=add_all_modules /crypto/
 
 # include cryptsetup udev rules
