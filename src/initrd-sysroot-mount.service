@@ -26,4 +26,4 @@ WantedBy=initrd-root-fs.target
 
 [X-SystemdTool]
 
-# empty
+# not used

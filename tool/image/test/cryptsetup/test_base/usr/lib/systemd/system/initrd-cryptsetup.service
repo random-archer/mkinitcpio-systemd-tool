@@ -75,8 +75,8 @@ InitrdPath=/usr/lib/udev/rules.d/13-dm-disk.rules
 InitrdPath=/usr/lib/udev/rules.d/95-dm-notify.rules
 
 # include systemd cryptsetup support
-InitrdPath=/usr/lib/systemd/system/cryptsetup.target
-InitrdPath=/usr/lib/systemd/system/cryptsetup-pre.target
+InitrdUnit=/usr/lib/systemd/system/cryptsetup.target
+InitrdUnit=/usr/lib/systemd/system/cryptsetup-pre.target
 InitrdBinary=/usr/lib/systemd/systemd-cryptsetup
 InitrdBinary=/usr/lib/systemd/system-generators/systemd-cryptsetup-generator
 InitrdBinary=/usr/lib/systemd/system-generators/systemd-fstab-generator
