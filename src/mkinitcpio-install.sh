@@ -1,10 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
 
 # Provides https://wiki.archlinux.org/index.php/Mkinitcpio#Build_hooks
 
 # Using shell linter: https://github.com/koalaman/shellcheck
+# shellcheck shell=bash
 
 # mkinitcpio entry point
 help() {
@@ -16,7 +17,7 @@ help() {
 # mkinitcpio entry point
 build() {
     #
-    # selection logic:
+    # systemd service unit selection logic:
     #
     # 1. "proper" symlinks in /etc/systemd/system
     # mostly represent aliased/enabled service units;

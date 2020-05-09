@@ -50,7 +50,7 @@ TTYPath=/dev/console
 InitrdPath=/usr/lib/systemd/system/systemd-ask-password-console.path      replace=yes create=yes
 InitrdPath=/usr/lib/systemd/system/systemd-ask-password-console.service   replace=yes create=yes
 InitrdPath=/usr/lib/systemd/system/systemd-ask-password-wall.path         replace=yes create=yes
-InitrdPath=/usr/lib/systemd/system/systemd-ask-password-wall.servive      replace=yes create=yes
+InitrdPath=/usr/lib/systemd/system/systemd-ask-password-wall.service      replace=yes create=yes
 
 # provide folder for sysroot.mount
 InitrdPath=/sysroot/    create=yes

@@ -5,7 +5,7 @@
 # https://github.com/freedesktop/plymouth/blob/master/docs/development.txt
 
 # note:
-# this is a twin unit for initrd-plymouth.service
+# this is a twin unit for initrd-plymouth.path
 # enable only initrd-plymouth.path, initrd-plymouth.service is activated on demand
 
 # note:
@@ -50,7 +50,7 @@ TTYPath=/dev/console
 InitrdPath=/usr/lib/systemd/system/systemd-ask-password-plymouth.path      replace=yes create=yes
 InitrdPath=/usr/lib/systemd/system/systemd-ask-password-plymouth.service   replace=yes create=yes
 
-# plymouth client app
+# provision plymouth client
 InitrdBinary=/usr/bin/plymouth
 
 # TODO
