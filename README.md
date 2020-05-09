@@ -26,6 +26,7 @@ Features provided by the included service units:
 * early network setup
 * interactive user shell
 * remote ssh access in initrd
+* cryptsetup + plymouth support
 * cryptsetup + custom password agent
 
 </details>
@@ -39,7 +40,6 @@ Useful issues [resolved in the past](https://github.com/random-archer/mkinitcpio
 Basic usage steps:
 
 1) study and practice [system recovery](https://github.com/random-archer/mkinitcpio-systemd-tool/wiki/System-Recovery)<br/>
-as practice shows configuration errors do occur
 
 2) install the package
 ```
@@ -48,7 +48,7 @@ pacman -S mkinitcpio-systemd-tool
 
 3) activate required hooks in `/etc/mkinitcpio.conf`:
 ```
-HOOKS="base ... systemd systemd-tool"
+HOOKS=(base ... systemd systemd-tool)
 ```
 
 4) configure, override and enable/disable [provided units](https://github.com/random-archer/mkinitcpio-systemd-tool/tree/master/src), for example: <br/>

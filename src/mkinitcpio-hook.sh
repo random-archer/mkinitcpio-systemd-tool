@@ -1,4 +1,4 @@
-#!/usr/bin/ash
+#!/usr/bin/env bash
 
 # This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
 

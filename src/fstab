@@ -1,5 +1,9 @@
 # This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
 
+# REQUIRED READING:
+# * https://github.com/random-archer/mkinitcpio-systemd-tool/wiki/Root-vs-Fstab
+# * https://github.com/random-archer/mkinitcpio-systemd-tool/wiki/System-Recovery
+
 # fstab: mappings for direct partitions in initramfs:
 # * file location in initramfs: /etc/fstab
 # * file location in real-root: /etc/mkinitcpio-systemd-tool/config/fstab
@@ -11,8 +15,7 @@
 # https://www.freedesktop.org/software/systemd/man/systemd-fstab-generator.html
 # https://github.com/systemd/systemd/blob/master/src/fstab-generator/fstab-generator.c
 
-# note: 
-# * ensure /sysroot mount folder inside initramfs disk image
+# note:
 # * remove "root=/dev/mapper/root" stanza from kernel command line
 # * provide here root partition mapping (instead of kernel command line)
 # * ensure that mapper-path in fstab corresponds to mapper-name in crypttab
