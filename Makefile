@@ -2,7 +2,7 @@ PREFIX ?= /usr/local
 SYSTEMD_SYSTEM_PATH ?= /usr/lib
 
 install:
-	install -vDm 644 src/*.conf -t $(DESTDIR)/etc/mkinitcpio-systemd-tool/config
+	install -vDm 644 src/{initrd-nftables,initrd-util-usb-hcd}.conf -t $(DESTDIR)/etc/mkinitcpio-systemd-tool/config
 	install -vDm 644 src/fstab -t $(DESTDIR)/etc/mkinitcpio-systemd-tool/config
 	install -vDm 644 src/crypttab -t $(DESTDIR)/etc/mkinitcpio-systemd-tool/config
 	install -vDm 644 src/initrd-network.network -t $(DESTDIR)/etc/mkinitcpio-systemd-tool/network/
@@ -13,3 +13,4 @@ install:
 	install -vDm 644 src/*.{path,service,target} -t $(DESTDIR)$(SYSTEMD_SYSTEM_PATH)/systemd/system
 	install -vDm 644 LICENSE.md -t $(DESTDIR)$(PREFIX)/share/licenses/mkinitcpio-systemd-tool
 	install -vDm 644 README.md -t $(DESTDIR)$(PREFIX)/share/doc/mkinitcpio-systemd-tool
+	install -vDm 644 src/mkinitcpio-systemd-tool.conf -t $(DESTDIR)/etc/mkinitcpio-systemd-tool
