@@ -1,0 +1,34 @@
+# /etc/systemd/system/initrd-ntpd.service
+# This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
+
+# Provide time syncing in initramfs
+
+# note:
+# - Make sure /etc/mkinitcpio-systemd-tool/config/ntp.conf has server entries
+
+# service dependencies:
+# - https://www.archlinux.org/packages/community/x86_64/busybox/
+
+[Unit]
+Description=Initrd NTPD Service
+Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md
+ConditionPathExists=/etc/initrd-release
+DefaultDependencies=no
+After=initrd-network.service
+Before=cryptsetup-pre.target
+Requires=initrd-network.service
+
+[Service]
+ExecStart=/usr/bin/busybox ntpd -n -q
+Restart=on-failure
+RestartSec=30s
+
+[Install]
+WantedBy=sysinit.target
+
+[X-SystemdTool]
+# use full busybox (provides ntpd applet)
+InitrdBinary=/usr/bin/busybox replace=yes
+
+# include ntp.conf
+InitrdPath=/etc/ntp.conf source=/etc/mkinitcpio-systemd-tool/config/ntp.conf
