@@ -6,6 +6,9 @@
 #   quiet() - output to console, depending on mkinitcpio "-v" option
 #   plain() - output to console, always
 
+# load configuration file
+source /etc/mkinitcpio-systemd-tool/mkinitcpio-systemd-tool.conf
+
 # enforce specific login shell in /etc/passwd
 do_root_shell() {
     local shell="/bin/sh"
@@ -63,14 +66,28 @@ do_tinysshd_keys() {
     quiet "provide host server ssh keys"
     
     local keydir=/etc/tinyssh/sshkeydir
+    local open_ssh_key=/etc/ssh/ssh_host_ed25519_key
     
-    mkdir -p $keydir
-    chmod go-rwx $keydir 
+    if [[ $openssh_key_convert == "true"  ]]; then
+        if ! [[ -f  "$open_ssh_key" ]]; then
+            plain "OpenSSH key not found in $open_ssh_key"
+            plain "Aborting OpenSSH key conversion"  
+            return
+        fi
+
+        if [[ -d "$keydir" ]]; then
+            plain "remove existing $keydir"
+            rm -rf "$keydir"
+        fi
     
-    plain "convert openssh to tinysshd host key ed25519"
+        plain "convert openssh to tinysshd host key ed25519"
     
-    run_command tinyssh-convert -f /etc/ssh/ssh_host_ed25519_key -d $keydir
-	
+        run_command tinyssh-convert $keydir < $open_ssh_key	
+        chmod go-rwx "$keydir"
+    else 
+        plain "converting openssh keys disabled!"
+    fi
+
 }
 
 # location of server host keys used by openssh
