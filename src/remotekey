@@ -1,0 +1,13 @@
+# This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
+
+# Host IP with cryptsetup keys
+REMOTE_KEY_IP=
+
+# SSH user on the host
+REMOTE_KEY_USER=keys
+
+# Name of the key file
+REMOTE_KEY_FILE=cryptroot.key
+
+# Timeout (seconds)
+REMOTE_KEY_TIMEOUT=10
