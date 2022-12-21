@@ -64,8 +64,8 @@ systemctl enable initrd-sysroot-mount.service
 
 5) build image, review content and finally reboot:
 ```
-mkinitcpio -v -p linux > build.log
-lsinitcpio -l /boot/initramfs-linux.img
+mkinitcpio -v -p linux > /tmp/initrd.log
+lsinitcpio -l /boot/initramfs-linux.img | grep initrd
 systemctl reboot
 ```
 
