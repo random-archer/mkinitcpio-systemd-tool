@@ -90,6 +90,27 @@ do_tinysshd_keys() {
 
 }
 
+# ensure remote key include required systemd-cryptsetup@%i.service.d/override.conf
+do_remote_key() {
+
+    quiet "include required systemd-cryptsetup@%i.service.d/override.conf"
+
+    local system=/etc/systemd/system
+    local service="initrd-cryptsetup-remote-key.service"
+    local cryptdevice=
+
+    for i in $(find $system -type f -name "override.conf" | egrep "^$system/systemd-cryptsetup@.*\.service\.d"); do
+        if egrep -q "^After=$service" $i; then
+            cryptdevice=$(echo "$i" | sed 's|/etc/systemd/system/systemd-cryptsetup@\(.*\)\.service\.d/override.conf|\1|')
+
+            plain "include remote key dependency for $cryptdevice"
+
+            mkdir -p ${BUILDROOT}$(dirname "$i")
+            cp "$i" "${BUILDROOT}$i"
+        fi
+    done
+}
+
 # location of server host keys used by openssh
 keypath_openssh() {
     local type=$1

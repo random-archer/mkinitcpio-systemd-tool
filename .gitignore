@@ -17,3 +17,4 @@ data/
 # local package install resources
 pkg/
 *.pkg.tar.xz
+*.pkg.tar.zst

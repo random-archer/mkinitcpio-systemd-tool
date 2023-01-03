@@ -1,0 +1,46 @@
+# This file is part of https://github.com/random-archer/mkinitcpio-systemd-tool
+
+# Trying to "scp" a keyfile set in crypttab
+
+# note:
+# to enable remote key dependency for a specific crypted device,
+# provide system unit overrides with these lines uncommented (replace <crypttab mapper name>):
+#
+# shell unit: /etc/systemd/system/systemd-cryptsetup@<crypttab mapper name>.service.d/override.conf
+#
+# [Unit]
+# After=initrd-cryptsetup-remote-key.service
+# Requires=initrd-cryptsetup-remote-key.service
+#
+# note:
+# configure /etc/mkinitcpio-systemd-tool/config/remotekey with host IP, user and keyfile name
+
+[Unit]
+Description=Initrd Cryptsetup Remote Key
+Documentation=https://github.com/random-archer/mkinitcpio-systemd-tool/blob/master/README.md
+ConditionPathExists=/etc/initrd-release
+ConditionPathExists=/etc/remotekey
+DefaultDependencies=no
+After=systemd-networkd.service
+After=systemd-resolved.service
+Requires=initrd-network.service
+Requires=systemd-networkd.service
+Requires=systemd-resolved.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStart=/usr/lib/mkinitcpio-systemd-tool/initrd-remote-key.sh
+
+[Install]
+WantedBy=sysinit.target
+
+[X-SystemdTool]
+
+# provision dropbear client
+InitrdBinary=/bin/dbclient
+InitrdPath=/usr/lib/mkinitcpio-systemd-tool/initrd-remote-key.sh mode=700
+InitrdPath=/root/.ssh/id_dropbear
+InitrdPath=/etc/remotekey   source=/etc/mkinitcpio-systemd-tool/config/remotekey   replace=yes
+InitrdBuild=/usr/lib/mkinitcpio-systemd-tool/initrd-build.sh command=do_remote_key
+

@@ -20,7 +20,7 @@ url="https://github.com/random-archer/mkinitcpio-systemd-tool"
 license=('Apache')
 depends=('mkinitcpio' 'systemd')
 optdepends=('cryptsetup: for initrd-cryptsetup.service'
-            'dropbear: for initrd-dropbear.service'
+            'dropbear: for initrd-dropbear.service and initrd-cryptsetup-remote-key.service'
             'busybox: for initrd-tinysshd.service'
             'mc: for initrd-debug-progs.service'
             'nftables: for initrd-nftables.service'
@@ -29,6 +29,7 @@ optdepends=('cryptsetup: for initrd-cryptsetup.service'
 conflicts=('mkinitcpio-dropbear' 'mkinitcpio-tinyssh')
 backup=("etc/${pkgname}/config/crypttab"
         "etc/${pkgname}/config/fstab"
+        "etc/${pkgname}/config/remotekey"
         "etc/${pkgname}/config/initrd-nftables.conf"
         "etc/${pkgname}/config/initrd-util-usb-hcd.conf"
         "etc/${pkgname}/network/initrd-network.network" )
