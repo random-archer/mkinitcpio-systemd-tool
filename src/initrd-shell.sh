@@ -138,6 +138,8 @@ is_console_stable() {
 
 # ensure console is no longer changing
 await_console_stable() {
+    local tty=$(tty)
+    [[ -z "${tty##/dev/pts/*}" ]] && return 0
     await_condition is_console_stable
 }
 
