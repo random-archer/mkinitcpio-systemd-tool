@@ -145,13 +145,17 @@ add_systemd_unit_X() {
     # and other unit files will be discovered and added.
     #   $1: service unit candidate: either symlink to a unit or a real unit file
 
-    local unit_task="" unit_name="" unit_path="" unit_target=""
+    local unit_task="" unit_name="" unit_path="" unit_target="" symlink_name=""
 
     # absolute path to the unit candidate
     unit_task="$1"
 
-    # simple service unit name
-    unit_name=$(basename "$unit_task")
+    # Extract the basename of the symlink. This may be an instanciated service
+    # with an argument, e.g. my-fancy-tool@my-arg.service.
+    symlink_name=$(basename "$unit_task")
+    # Extract the name of the service template, e.g. my-fancy-tool@my-arg.service
+    # becomes my-fancy-tool@.service.
+    unit_name=$(sed 's/@.\+\./@\./g' <<< "$symlink_name")
 
     quiet "processing systemd unit $unit_name"
 
@@ -359,7 +363,7 @@ add_systemd_unit_X() {
     # this_unit/[Install]/WantedBy=  other_unit   -> enable ->   /other.unit.wants/   this_unit
     # this_unit/[Install]/RequiredBy=other_unit   -> enable ->   /other.unit.requires/this_unit
     local unit_reverse=""
-    for unit_reverse in {/etc,/usr/lib}/systemd/system/*{.wants,.requires}/"$unit_name" ; do
+    for unit_reverse in {/etc,/usr/lib}/systemd/system/*{.wants,.requires}/"$symlink_name" ; do
         if [[ -L "$unit_reverse" ]] ; then
             add_symlink "$unit_reverse"
         fi
