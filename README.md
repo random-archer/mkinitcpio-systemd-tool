@@ -2,7 +2,9 @@
 
 ## mkinitcpio-systemd-tool
 
+<!--
 [![Master Status](https://dev.azure.com/random-archer/mkinitcpio-systemd-tool/_apis/build/status/random-archer.mkinitcpio-systemd-tool?branchName=master)](https://dev.azure.com/random-archer/mkinitcpio-systemd-tool/_build/latest?definitionId=1&branchName=master)
+-->
 
 ### Summary
 
