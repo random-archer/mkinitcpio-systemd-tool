@@ -5,6 +5,7 @@ install:
 	install -vDm 644 src/{initrd-nftables,initrd-util-usb-hcd}.conf -t $(DESTDIR)/etc/mkinitcpio-systemd-tool/config
 	install -vDm 644 src/fstab -t $(DESTDIR)/etc/mkinitcpio-systemd-tool/config
 	install -vDm 644 src/crypttab -t $(DESTDIR)/etc/mkinitcpio-systemd-tool/config
+	install -vDm 644 src/ntp.conf -t $(DESTDIR)/etc/mkinitcpio-systemd-tool/config
 	install -vDm 644 src/initrd-network.network -t $(DESTDIR)/etc/mkinitcpio-systemd-tool/network/
 	install -vDm 755 src/mkinitcpio-hook.sh $(DESTDIR)$(PREFIX)/lib/initcpio/hooks/systemd-tool
 	install -vDm 755 src/mkinitcpio-install.sh $(DESTDIR)$(PREFIX)/lib/initcpio/install/systemd-tool
