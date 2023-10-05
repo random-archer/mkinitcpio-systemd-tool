@@ -37,7 +37,7 @@ InitrdBuild=/usr/lib/mkinitcpio-systemd-tool/initrd-build.sh command=do_root_she
 InitrdBuild=/usr/lib/mkinitcpio-systemd-tool/initrd-build.sh command=do_secret_clean
 
 # include ssh credentials
-InitrdPath=/root/.ssh/authorized_keys source=/etc/mkinicpio-systemd-tool/config/authorized_keys mode=600
+InitrdPath=/root/.ssh/authorized_keys source=/etc/mkinitcpio-systemd-tool/config/authorized_keys mode=600
 
 # override system actions
 InitrdLink=/usr/bin/halt       target=/usr/bin/systemctl
