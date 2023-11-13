@@ -150,7 +150,7 @@ how can I provide custom interactive user shell for ssh client
 * change sample shell file located in `/usr/lib/mkinitcpio-systemd-tool/initrd-shell.sh`
 
 which ssh user keys are used by initramfs sshd server(s)?
-* they come from host `/root/.ssh/authorized_keys`
+* they come from host `/root//etc/mkinitcpio-systemd-tool/config/authorized_keys`
 
 ### Shell Script Questions and Answers
 
