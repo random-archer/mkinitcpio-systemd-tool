@@ -20,11 +20,18 @@ do_root_shell() {
 
 # remove optional entries form /etc/{group,passwd,shadow} 
 do_secret_clean() {
-    local core="^root:.*|^systemd-.*"
-    local udev="^tty:.*|^uucp:.*|^kmem:.|^input:.*|^video:.*|^audio:.*|^lp:.*|^disk:.*|^optical:.*|^storage:.*"
+    local core=("root" "systemd-.*")
+    local udev=("tty" "uucp" "kmem" "input" "video" "audio" "lp" "disk" "optical" "storage")
+    local all_users=("${core[@]}" "${udev[@]}" "${preserve_additional_accounts[@]}")
+    local user_regex
+    for user in "${all_users[@]}" ; do
+	user_regex+="|^${user}:.*"
+    done
+    # Delete the leading |
+    user_regex="${user_regex:1:${#user_regex}}"
     local target
     for target in $BUILDROOT/etc/{group,passwd,shadow} ; do
-        run_command sed -i -r -e "/${core}|${udev}/!d" "$target"
+	run_command sed -i -r -e "/${user_regex}/!d" "${target}"
     done
 }
 
@@ -111,3 +118,5 @@ run_command() {
          *) error "command failure ($status): $command \n$result\n" ; return 1 ;;  
     esac
 }
+
+do_secret_clean
