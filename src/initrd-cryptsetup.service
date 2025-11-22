@@ -69,7 +69,8 @@ InitrdCall=add_all_modules /crypto/
 
 # include cryptsetup udev rules
 InitrdPath=/usr/lib/udev/rules.d/10-dm.rules
-InitrdPath=/usr/lib/udev/rules.d/11-dm-initramfs.rules source=/usr/lib/initcpio/udev/11-dm-initramfs.rules
+# 11-dm-initramfs.rules is obsolete; see #115 #116
+InitrdPath=/usr/lib/udev/rules.d/11-dm-initramfs.rules source=/usr/lib/initcpio/udev/11-dm-initramfs.rules optional=yes 
 InitrdPath=/usr/lib/udev/rules.d/13-dm-disk.rules
 InitrdPath=/usr/lib/udev/rules.d/95-dm-notify.rules
 
