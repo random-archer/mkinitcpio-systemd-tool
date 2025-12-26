@@ -118,5 +118,3 @@ run_command() {
          *) error "command failure ($status): $command \n$result\n" ; return 1 ;;  
     esac
 }
-
-do_secret_clean
