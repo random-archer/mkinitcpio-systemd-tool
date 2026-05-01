@@ -11,29 +11,39 @@ source /etc/mkinitcpio-systemd-tool/mkinitcpio-systemd-tool.conf
 
 # enforce specific login shell in /etc/passwd
 do_root_shell() {
-    local shell="/bin/sh"
-    local search="(root):([^:]*):([^:]*):([^:]*):([^:]*):([^:]*):([^:]*)"
-    local replace="\1:\2:\3:\4:\5:\6:${shell}"
+    quiet "set root shell to /bin/sh"
     local target="$BUILDROOT/etc/passwd"
-    run_command sed -i -r -e "s|${search}|${replace}|" "$target"
+    if [[ -f "$target" ]]; then
+        sed -i 's|^root:.*|root:x:0:0:root:/root:/bin/sh|' "$target" || true
+    fi
 }
 
-# remove optional entries form /etc/{group,passwd,shadow} 
+# remove optional entries from /etc/{group,passwd,shadow} — stable version
 do_secret_clean() {
-    local core=("root" "systemd-.*")
-    local udev=("tty" "uucp" "kmem" "input" "video" "audio" "lp" "disk" "optical" "storage")
-    local all_users=("${core[@]}" "${udev[@]}" "${preserve_additional_accounts[@]}")
-    local user_regex
-    for user in "${all_users[@]}" ; do
-	user_regex+="|^${user}:.*"
+    quiet "minimal secret files cleanup (stable version with temp file)"
+
+    local core="^root:.*|^systemd-.*"
+    local udev="^tty:.*|^uucp:.*|^kmem:.*|^input:.*|^video:.*|^audio:.*|^lp:.*|^disk:.*|^optical:.*|^storage:.*"
+
+    local extra=""
+    for acc in "${preserve_additional_accounts[@]}" ; do
+        [[ -n "$acc" ]] && extra+="|^${acc}:.*"
     done
-    # Delete the leading |
-    user_regex="${user_regex:1:${#user_regex}}"
-    local target
-    for target in $BUILDROOT/etc/{group,passwd,shadow} ; do
-	run_command sed -i -r -e "/${user_regex}/!d" "${target}"
+
+    local regex="${core}|${udev}${extra}"
+
+    local sedfile=$(mktemp)
+    echo "/${regex}/!d" > "$sedfile"
+
+    for target in "$BUILDROOT"/etc/{group,passwd,shadow} ; do
+        if [[ -f "$target" ]]; then
+            run_command sed -i -r -f "$sedfile" "$target"
+        fi
     done
+
+    rm -f "$sedfile"
 }
+
 
 # re-enable root login via password for initramfs only
 do_root_login_enable() {
