@@ -114,13 +114,18 @@ clear_console_input() {
 
 # invoke operation within a timeout
 await_condition() {
-    local command="$*" count=1
+    local count=1
     while true ; do
-        $command && return 0
+        "$@" && return 0
         sleep "$sleep_delay" ; count=$((count+1))
         [[ "$count" -gt "$sleep_count" ]] && return 1
     done
 }
+
+has_no_crypt_jobs() {
+ ! has_crypt_jobs
+}
+
 
 # get a portion of current console output
 read_console_tail() {
@@ -150,7 +155,7 @@ await_request_present() {
 
 # ensure secret was correct (crypto jobs are gone)
 await_secret_validated() {
-    await_condition [[ ! has_crypt_jobs ]]
+    await_condition has_no_crypt_jobs
 }
 
 # query password from the terminal or plymouth
