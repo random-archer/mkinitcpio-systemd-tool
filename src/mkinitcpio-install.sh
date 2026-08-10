@@ -71,7 +71,6 @@ plain_unit_concat() {
     local unit_content=""
     local service_path=""
     local override_path=""
-    plain "using synthetic concat for $unit_name"
     # add the top-most service
     for service_path in {/usr/lib,/etc}/systemd/system ; do
         if [[ -f "${service_path}/${unit_name}" ]] ; then
